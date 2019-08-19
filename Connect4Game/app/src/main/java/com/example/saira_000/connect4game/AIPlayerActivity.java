@@ -142,11 +142,6 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
             win();
         } else {
 
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             toggleTurn();
         }
     }
