@@ -42,7 +42,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         board = new Board(numberOfRows,numberOfColumns);
         boardView = findViewById(R.id.game_board);
         buildCells();
-        togglePlayer();
+        playerTouch();
 
         aiPlayer = new AIPlayer();
         viewHolder = new AIPlayerActivity.ViewHolder();
@@ -69,51 +69,33 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         //if (board.turn==Board.Turn.PLAYER_2) return;
         int col = colAtX(view.getX());
         String temp = view.getX() + "";
-        Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
+       // Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
         if (col != -1) {
-            drop(col);
+            dropDisc(col);
         }
     }
 
-    private void togglePlayer() {
+    private void playerTouch() {
+        
+        boardView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                   
+                switch (motionEvent.getAction()) {
 
-
-
-
-            boardView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    if(board.turn==Board.Turn.PLAYER_1) {
-                        switch (motionEvent.getAction()) {
-
-                            case MotionEvent.ACTION_POINTER_UP:
-                            case MotionEvent.ACTION_UP: {
-                                int col = colAtX(motionEvent.getX());
-                                String temp = motionEvent.getX() + "";
-                                Toast.makeText(AIPlayerActivity.this, temp, Toast.LENGTH_SHORT).show();
-                                if (col != -1) {
-                                    drop(col);
-
-                                    int a;
-                                }
-                            }
-                        }
-                    }
-
-                    else{
-
-                        int randomInt = aiPlayer.babyLevel();
-                        int col = aiColTest(randomInt);
-                        //drop(col);
-                        String temp = col + "";
-                        Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
-                        if (col != -1){
-                             drop(col);
+                    case MotionEvent.ACTION_POINTER_UP: 
+                        case MotionEvent.ACTION_UP: {
+                            int col = colAtX(motionEvent.getX());
+                            String temp = motionEvent.getX() + "";
+                            //Toast.makeText(AIPlayerActivity.this, temp, Toast.LENGTH_SHORT).show();
+                            if (col != -1) {
+                                dropDisc(col);
+                            } 
                         }
                     }
                     return true;
-                }
-            });
+            }
+        });
 
 
     }
@@ -132,7 +114,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void drop(int col) {
+    private void dropDisc(int col) {
         if (board.winCondition)
             return;
         int row = board.lastAvailableRow(col);
@@ -140,21 +122,22 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
             return;
         final ImageView cell = cells[row][col];
         //float move = -(cell.getHeight() * row + cell.getHeight() + 15);
-        float move = -(cell.getHeight() * row + cell.getHeight() );
+        float move = -(cell.getHeight() * row + cell.getHeight() + 20);
         cell.setY(move);
         cell.setImageResource(resourceForTurn());
 
-        TranslateAnimation anim = new TranslateAnimation(0, 0, 0, Math.abs(move));
-        anim.setDuration(200);
-        anim.setFillAfter(true);
-        cell.startAnimation(anim);
+        TranslateAnimation animation = new TranslateAnimation(0, 0, 0, Math.abs(move));
+        animation.setDuration(200);
+        animation.setFillAfter(true);
+        cell.startAnimation(animation);
 
         board.occupyCell(row, col);
+        onEnterAnimationComplete();
 
         if (board.checkForWin()) {
             win();
         } else {
-            aiTurn();
+            toggleTurn();
         }
     }
 
@@ -184,13 +167,25 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
 
 
     private void aiTurn() {
-        board.toggleTurn();
-        viewHolder.turnIndicatorImageView.setImageResource(resourceForTurn());
+
+        if(board.turn==Board.Turn.PLAYER_2) {
+            int randomInt = aiPlayer.babyLevel();
+            int col = aiColTest(randomInt);
+            //dropDisc(col);
+            String temp = col + "";
+           // Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
+            if (col != -1){
+                dropDisc(col);
+            }
+        }
     }
 
-    private void changeTurn() {
+    private void toggleTurn() {
         board.toggleTurn();
         viewHolder.turnIndicatorImageView.setImageResource(resourceForTurn());
+        if(board.turn==Board.Turn.PLAYER_2) {
+            aiTurn();
+        }
     }
 
     private int colAtX(float x) {
