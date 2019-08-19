@@ -93,6 +93,8 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
                                 Toast.makeText(AIPlayerActivity.this, temp, Toast.LENGTH_SHORT).show();
                                 if (col != -1) {
                                     drop(col);
+
+                                    int a;
                                 }
                             }
                         }
