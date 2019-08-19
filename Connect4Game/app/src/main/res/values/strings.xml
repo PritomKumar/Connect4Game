@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Connect4Game</string>
+    <string name="title_activity_aiplayer_level">AIPlayerLevel</string>
+</resources>
