@@ -118,11 +118,14 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         if (board.winCondition)
             return;
         int row = board.lastAvailableRow(col);
-        if (row == -1)
+        if (row == -1) {
             return;
+        }
+
+
         final ImageView cell = cells[row][col];
         //float move = -(cell.getHeight() * row + cell.getHeight() + 15);
-        float move = -(cell.getHeight() * row + cell.getHeight() + 20);
+        float move = -(cell.getHeight() * row + cell.getHeight());
         cell.setY(move);
         cell.setImageResource(resourceForTurn());
 
@@ -131,12 +134,19 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         animation.setFillAfter(true);
         cell.startAnimation(animation);
 
-        board.occupyCell(row, col);
         onEnterAnimationComplete();
+        board.occupyCell(row, col);
+
 
         if (board.checkForWin()) {
             win();
         } else {
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             toggleTurn();
         }
     }
