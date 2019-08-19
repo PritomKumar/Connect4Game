@@ -1,9 +1,11 @@
 package com.example.saira_000.connect4game;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AIPlayerActivity extends AppCompatActivity {
+public class AIPlayerActivity  extends AppCompatActivity implements View.OnClickListener {
 
     private int player1Score = 0;
     private int player2Score = 0;
@@ -62,37 +64,56 @@ public class AIPlayerActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onClick(@NonNull View view) {
+        //if (board.turn==Board.Turn.PLAYER_2) return;
+        int col = colAtX(view.getX());
+        String temp = view.getX() + "";
+        Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
+        if (col != -1) {
+            drop(col);
+        }
+    }
+
     private void togglePlayer() {
 
-        if(board.turn==Board.Turn.PLAYER_1){
+
+
+
             boardView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    switch (motionEvent.getAction()) {
-                        case MotionEvent.ACTION_POINTER_UP:
-                        case MotionEvent.ACTION_UP: {
-                            int col = colAtX(motionEvent.getX());
-                            String temp = motionEvent.getX() + "";
-                            Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
-                            if (col != -1)
-                                drop(col);
+                    if(board.turn==Board.Turn.PLAYER_1) {
+                        switch (motionEvent.getAction()) {
+
+                            case MotionEvent.ACTION_POINTER_UP:
+                            case MotionEvent.ACTION_UP: {
+                                int col = colAtX(motionEvent.getX());
+                                String temp = motionEvent.getX() + "";
+                                Toast.makeText(AIPlayerActivity.this, temp, Toast.LENGTH_SHORT).show();
+                                if (col != -1) {
+                                    drop(col);
+                                }
+                            }
+                        }
+                    }
+
+                    else{
+
+                        int randomInt = aiPlayer.babyLevel();
+                        int col = aiColTest(randomInt);
+                        //drop(col);
+                        String temp = col + "";
+                        Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
+                        if (col != -1){
+                             drop(col);
                         }
                     }
                     return true;
                 }
             });
-        }
-        else{
 
-            int randomInt = aiPlayer.babyLevel();
-            int col = aiColTest(randomInt);
-            drop(col);
-            String temp = col + "";
-            Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
-            if (col != -1){
-               // drop(col);
-                }
-        }
+
     }
 
 
