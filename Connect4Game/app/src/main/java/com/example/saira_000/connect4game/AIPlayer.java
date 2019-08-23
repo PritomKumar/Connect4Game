@@ -5,14 +5,11 @@ import android.util.Log;
 import static android.bluetooth.BluetoothHidDeviceAppQosSettings.MAX;
 
 public class AIPlayer {
-
-    private BoardLogic boardLogic;
     private Board.Turn newplayer;
     private Node currentNode;
     Node head , tail;
     private int numberOfColumns=7;
     private int numberOfRows=6;
-    private Cell[][] tempCell;
 
     public AIPlayer() {
 
@@ -41,7 +38,7 @@ public class AIPlayer {
         currentNode = new Node(currentCell, Board.Turn.PLAYER_2);
         head = currentNode;
 
-        return miniMax(currentNode,1,true) ;
+        return miniMax(currentNode,2,true) ;
     }
 
     public int hardLevel(){
@@ -63,7 +60,10 @@ public class AIPlayer {
         return -1;
     }
 
-    public Cell [][] occupyCell(Board.Turn player , int row , int col ,  Cell [][] cells) {
+    public Cell[][] occupyCell(Board.Turn player , int row , int col ,  Cell [][] cells) {
+
+        String t = "col =  " + col  +" row " + row;
+        //Log.d("occupy", t);
 
         cells[row][col].setPlayer(player);
         return  cells;
@@ -94,23 +94,28 @@ public class AIPlayer {
 
     public int miniMax(Node current ,int depth , boolean maximizingPlayer){
 
-        boardLogic = new BoardLogic(current.player , currentNode.cells , 6 , 7 );
-        if(depth ==0|| boardLogic.checkForWin()){
+        BoardLogic boardLogic = new BoardLogic(current.player , current.cells , 6 , 7 );
+        if(depth ==0){
             return boardLogic.evalulationFunction();
         }
 
         if(maximizingPlayer){
             int bestValue = -999999;
             for (int col =0 ; col < numberOfColumns ; col++){
-                tempCell = currentNode.cells;
+                Cell [][] tempCell = current.cells;
                 int row = lastAvailableRow(col,tempCell);
+
+                String t = "col =  " + col  +" row " + row;
+                Log.d("maxmin", t);
                 if(row!=-1){
                     Cell [][] newCells  = occupyCell(current.player  , row , col , tempCell);
                     Node newNode = insertNewNode(col , current , newCells );
 
-                    String t = "col =  " + col  +" row " + row;
-                    Log.d("maxmin", t);
+                    String t2 = "col =  " + col  +" row " + row;
+                    Log.d("occupy", t2);
                     int value = miniMax(newNode , depth-1 , false);
+                    String t3 = value+"";
+                    Log.d("value", t3);
                     bestValue = maxValue(bestValue , value);
                 }
 
@@ -121,16 +126,18 @@ public class AIPlayer {
         else{
             int bestValue = 999999;
             for (int col =0 ; col < numberOfColumns ; col++){
-                tempCell = currentNode.cells;
+                Cell [][] tempCell = current.cells;
                 int row = lastAvailableRow(col,tempCell);
                 String t = "col =  " + col  +" row " + row;
-                Log.d("maxmin", t);
+                Log.d("min", t);
                 if(row!=-1){
                     Cell [][] newCells  = occupyCell(current.player  , row , col , tempCell);
                     Node newNode = insertNewNode(col , current , newCells );
 
 
                     int value = miniMax(newNode , depth-1 , true);
+                    String t2 = value+"";
+                    Log.d("value", t2);
                     bestValue = minValue(bestValue , value);
                 }
 
