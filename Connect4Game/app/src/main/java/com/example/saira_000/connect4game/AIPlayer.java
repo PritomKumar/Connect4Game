@@ -22,7 +22,7 @@ public class AIPlayer {
         return 0 ;
     }
 
-    public int veryLevel(){
+    public int veryHardLevel(){
 
         return 0 ;
     }
