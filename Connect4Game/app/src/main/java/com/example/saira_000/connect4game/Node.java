@@ -38,17 +38,5 @@ public class Node {
         }
     }
 
-    public int lastAvailableRow(int col) {
-        for (int row = numberOfRows - 1; row >= 0; row--) {
-            if (cells[row][col].empty) {
-                return row;
-            }
-        }
-        return -1;
-    }
 
-    public void occupyCell( int row , int col) {
-
-        cells[row][col].setPlayer(turn);
-    }
 }

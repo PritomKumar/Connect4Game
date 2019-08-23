@@ -38,7 +38,7 @@ public class AIPlayer {
     public int miniMax(Node current ,int depth , boolean maximisingPlayer){
 
         boardLogic = new BoardLogic(Board.Turn.PLAYER_2 , currentNode.cells , 6 , 7 );
-        if(depth ==0 || boardLogic.checkForWin()){
+        if(depth ==0){
 
         }
         return 0;
