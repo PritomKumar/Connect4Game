@@ -20,6 +20,7 @@ public class AIPlayer {
     public int mediumLevel(Cell [][] currentCell){
 
         currentNode = new Node(currentCell);
+
         return 0 ;
     }
 
@@ -36,7 +37,10 @@ public class AIPlayer {
 
     public int miniMax(Node current ,int depth , boolean maximisingPlayer){
 
-        if(depth ==0 ){}
+        boardLogic = new BoardLogic(Board.Turn.PLAYER_2 , currentNode.cells , 6 , 7 );
+        if(depth ==0 || boardLogic.checkForWin()){
+
+        }
         return 0;
     }
 }

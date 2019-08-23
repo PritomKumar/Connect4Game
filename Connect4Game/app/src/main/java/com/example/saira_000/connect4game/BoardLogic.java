@@ -91,4 +91,9 @@ public class BoardLogic {
         }
         return  false;
     }
+
+
+    public int evalulationFunction(){
+
+    }
 }
