@@ -8,15 +8,16 @@ public class Node {
     public boolean winCondition;
     public Cell[][] cells;
 
-    Node parent ;
-    Node [] column;
+    public Node parent ;
+    public Node [] column;
 
-    private Board.Turn turn;
+    public Board.Turn player;
 
-    public Node(Cell[][] currentBoard) {
+    public Node(Cell[][] currentBoard , Board.Turn turn) {
 
         cells = new Cell[numberOfRows][numberOfColumns];
         column = new Node[numberOfColumns];
+        player = turn;
         initialState(currentBoard);
     }
 
