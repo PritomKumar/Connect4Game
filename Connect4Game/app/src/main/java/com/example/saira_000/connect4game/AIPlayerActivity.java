@@ -137,7 +137,6 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         onEnterAnimationComplete();
         board.occupyCell(row, col);
 
-
         if (board.checkForWin()) {
             win();
         } else {

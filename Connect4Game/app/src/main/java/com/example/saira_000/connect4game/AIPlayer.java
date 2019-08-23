@@ -2,7 +2,8 @@ package com.example.saira_000.connect4game;
 
 public class AIPlayer {
 
-
+    private BoardLogic boardLogic;
+    private Node currentNode;
 
     public int babyLevel(){
         int randomInt = (int)(6.0 * Math.random());
@@ -16,8 +17,9 @@ public class AIPlayer {
         return 0 ;
     }
 
-    public int mediumLevel(){
+    public int mediumLevel(Cell [][] currentCell){
 
+        currentNode = new Node(currentCell);
         return 0 ;
     }
 
