@@ -1,5 +1,7 @@
 package com.example.saira_000.connect4game;
 
+import static android.bluetooth.BluetoothHidDeviceAppQosSettings.MAX;
+
 public class AIPlayer {
 
     private BoardLogic boardLogic;
@@ -9,6 +11,16 @@ public class AIPlayer {
     private int numberOfColumns=7;
     private int numberOfRows=6;
     private Cell[][] tempCell;
+
+    public AIPlayer() {
+
+        createLinkedList();
+    }
+
+    private void createLinkedList() {
+        head= null;
+        tail = null;
+    }
 
     public int babyLevel(){
         int randomInt = (int)(6.0 * Math.random());
@@ -25,8 +37,9 @@ public class AIPlayer {
     public int mediumLevel(Cell [][] currentCell){
 
         currentNode = new Node(currentCell, Board.Turn.PLAYER_2);
+        head = currentNode;
 
-        return 0 ;
+        return miniMax(currentNode,1,true) ;
     }
 
     public int hardLevel(){
@@ -63,10 +76,24 @@ public class AIPlayer {
 
     }
 
+    private int maxValue(int bestValue, int value) {
+        if(bestValue >= value){
+            return  bestValue;
+        }
+        else return value;
+    }
+
+    private int minValue(int bestValue, int value) {
+        if(bestValue <= value){
+            return  bestValue;
+        }
+        else return value;
+    }
+
     public int miniMax(Node current ,int depth , boolean maximizingPlayer){
 
         boardLogic = new BoardLogic(current.player , currentNode.cells , 6 , 7 );
-        if(depth ==0){
+        if(depth ==0|| boardLogic.checkForWin()){
             return boardLogic.evalulationFunction();
         }
 
@@ -78,23 +105,43 @@ public class AIPlayer {
                 if(row!=-1){
                     Cell [][] newCells  = occupyCell(current.player  , row , col , tempCell);
                     Node newNode = insertNewNode(col , current , newCells );
+                    int value = miniMax(newNode , depth-1 , false);
+                    bestValue = maxValue(bestValue , value);
                 }
 
             }
+            return bestValue;
         }
 
+        else{
+            int bestValue = 999999;
+            for (int col =0 ; col < numberOfColumns ; col++){
+                tempCell = currentNode.cells;
+                int row = lastAvailableRow(col,tempCell);
+                if(row!=-1){
+                    Cell [][] newCells  = occupyCell(current.player  , row , col , tempCell);
+                    Node newNode = insertNewNode(col , current , newCells );
+                    int value = miniMax(newNode , depth-1 , true);
+                    bestValue = minValue(bestValue , value);
+                }
 
+            }
+            return bestValue;
+        }
 
-        return 0;
     }
 
+
+
     public Node insertNewNode(int col, Node current , Cell [][] newCells) {
+
 
         newplayer = toggleTurn(current.player);
         Node newNode = new Node(newCells , newplayer );
 
         current.column[col] = newNode;
         newNode.parent = current;
+
         return  newNode;
     }
 }

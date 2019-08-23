@@ -173,7 +173,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
     private void aiTurn() {
 
         if(board.turn==Board.Turn.PLAYER_2) {
-            int randomInt = aiPlayer.babyLevel();
+            int randomInt = aiPlayer.mediumLevel(board.cells);
             int col = aiColTest(randomInt);
             //dropDisc(col);
             String temp = col + "";
