@@ -195,6 +195,9 @@ public class BoardLogic {
             fillCellsWithCurrentPlayer();
             winCount = horizontalCheckCount() + verticalCheckCount()
                     + ascendingDiagonalCheckCount() + descendingDiagonalCheckCount();
+
+            String t = winCount +"";
+            Log.d("winCount", t);
             return  winCount;
         }
 

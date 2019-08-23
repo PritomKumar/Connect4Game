@@ -1,5 +1,7 @@
 package com.example.saira_000.connect4game;
 
+import android.util.Log;
+
 import static android.bluetooth.BluetoothHidDeviceAppQosSettings.MAX;
 
 public class AIPlayer {
@@ -105,6 +107,9 @@ public class AIPlayer {
                 if(row!=-1){
                     Cell [][] newCells  = occupyCell(current.player  , row , col , tempCell);
                     Node newNode = insertNewNode(col , current , newCells );
+
+                    String t = "col =  " + col  +" row " + row;
+                    Log.d("maxmin", t);
                     int value = miniMax(newNode , depth-1 , false);
                     bestValue = maxValue(bestValue , value);
                 }
@@ -118,9 +123,13 @@ public class AIPlayer {
             for (int col =0 ; col < numberOfColumns ; col++){
                 tempCell = currentNode.cells;
                 int row = lastAvailableRow(col,tempCell);
+                String t = "col =  " + col  +" row " + row;
+                Log.d("maxmin", t);
                 if(row!=-1){
                     Cell [][] newCells  = occupyCell(current.player  , row , col , tempCell);
                     Node newNode = insertNewNode(col , current , newCells );
+
+
                     int value = miniMax(newNode , depth-1 , true);
                     bestValue = minValue(bestValue , value);
                 }
