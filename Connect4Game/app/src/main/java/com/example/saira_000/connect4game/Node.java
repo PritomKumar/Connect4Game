@@ -31,11 +31,7 @@ public class Node {
             }
         }
 
-        for (int row = 0; row < numberOfRows; row++) {
-            for (int col = 0; col < numberOfColumns; col++) {
-                cells [row][col] = currentBoard[row][col];
-            }
-        }
+        
     }
 
     public int lastAvailableRow(int col) {
