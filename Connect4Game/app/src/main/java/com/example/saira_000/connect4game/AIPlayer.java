@@ -40,7 +40,7 @@ public class AIPlayer {
         currentNode = new Node(currentCell, Board.Turn.PLAYER_2);
         head = currentNode;
 
-        return miniMax(currentNode,2,true) ;
+        return miniMax(currentNode,6,true) ;
     }
 
     public int hardLevel(){
@@ -118,8 +118,10 @@ public class AIPlayer {
 
     private Stack< Node > dfs = new Stack<Node> ();
 
+    int iteration = 0;
     public int miniMax(Node current ,int depth , boolean maximizingPlayer){
 
+        iteration++;
         BoardLogic boardLogic = new BoardLogic(current.player , current.cells , 6 , 7 );
         if(depth ==0){
             return boardLogic.evalulationFunction();
@@ -132,15 +134,15 @@ public class AIPlayer {
             for (int col =0 ; col < numberOfColumns ; col++){
                 Cell [][] tempCell = current.cells;
                 int row = lastAvailableRow(col,tempCell);
+                printNode(current.cells);
 
-
-                String t = "col =  " + col  +" row " + row;
+                String t = "Iteration " + iteration + " col =  " + col  +" row " + row;
                 Log.d("maxmin", t);
                 if(row!=-1){
                     Cell [][] newCells  = occupyCell(current.player  , row , col , tempCell);
                     Node newNode = insertNewNode(col , current , newCells );
 
-                    String t2 = "col =  " + col  +" row " + row;
+                    String t2 = "Iteration " + iteration + " col =  " + col  +" row " + row;
                     Log.d("occupy", t2);
                     int value = miniMax(newNode , depth-1 , false);
 
@@ -157,7 +159,7 @@ public class AIPlayer {
             int bestValue = 999999;
             for (int col =0 ; col < numberOfColumns ; col++){
                 Cell [][] tempCell = current.cells;
-                printNode(current.cells);
+
 
                 int row = lastAvailableRow(col,tempCell);
                 String t = "col =  " + col  +" row " + row;

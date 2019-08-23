@@ -2,98 +2,21 @@ package com.example.saira_000.connect4game;
 
 import android.util.Log;
 
-public class BoardLogic {
+public class Testing {
 
     private Board.Turn player;
     private Cell[][] cells;
     private Cell[][] backUpCells;
-    private int numberOfColumns;
-    private int numberOfRows;
+    private int numberOfColumns = 7 ;
+    private int numberOfRows = 6;
     private int winCount=0;
 
-    public BoardLogic(Board.Turn player, Cell[][] cells, int numberOfRows ,int numberOfColumns) {
+    public Testing(Board.Turn player, Cell[][] cells) {
         this.player = player;
         this.cells = cells;
         this.backUpCells = cells;
-        this.numberOfRows = numberOfRows;
-        this.numberOfColumns = numberOfColumns;
     }
 
-    public boolean checkForWin(){
-        if(horizontalCheck() || verticalCheck() || ascendingDiagonalCheck() || descendingDiagonalCheck()){
-            return  true;
-        }
-        else {
-            return  false;
-        }
-    }
-
-    public boolean horizontalCheck() {
-        for(int i=0 ; i<numberOfRows ; i++){
-            for (int j=0 ; j<numberOfColumns-3 ; j++){
-                Cell cell = cells[i][j];
-                if(cell.player == player){
-                    if(cells[i][j].player== player && cells[i][j+1].player== player
-                            && cells[i][j+2].player== player && cells[i][j+3].player== player){
-                            return  true;
-                    }
-                }
-            }
-        }
-        return  false;
-    }
-
-    public boolean verticalCheck() {
-        for(int i=0 ; i<numberOfRows-3 ; i++){
-            for (int j=0 ; j<numberOfColumns ; j++){
-                Cell cell = cells[i][j];
-                if(cell.player == player){
-                    String t = i+3 +"";
-                    Log.d("verti", t);
-                    if(cells[i][j].player== player && cells[i+1][j].player== player
-                            && cells[i+2][j].player== player && cells[i+3][j].player== player){
-                        return  true;
-                    }
-                }
-            }
-        }
-        return  false;
-    }
-
-    public boolean ascendingDiagonalCheck() {
-        for(int i=3 ; i<numberOfRows ; i++){
-            for (int j=0 ; j<numberOfColumns-3 ; j++){
-                Cell cell = cells[i][j];
-                if(cell.player == player){
-                    String t = i+3 +"";
-                    Log.d("asi", t);
-                    if(cells[i][j].player== player && cells[i-1][j+1].player== player
-                            && cells[i-2][j+2].player== player && cells[i-3][j+3].player== player){
-                        return  true;
-                    }
-                }
-            }
-        }
-        return  false;
-    }
-
-    public boolean descendingDiagonalCheck() {
-
-        for(int i=3 ; i<numberOfRows ; i++){
-            for (int j=3 ; j<numberOfColumns ; j++){
-                Cell cell = cells[i][j];
-                if(cell.player == player){
-                    String t = i+3 +"";
-                    Log.d("dsi", t);
-                    if(cells[i][j].player== player && cells[i-1][j-1].player== player
-                            && cells[i-2][j-2].player== player && cells[i-3][j-3].player== player){
-                        return  true;
-                    }
-                }
-            }
-        }
-        return  false;
-    }
 
     public int horizontalCheckCount() {
 
@@ -101,9 +24,9 @@ public class BoardLogic {
         for(int i=0 ; i<numberOfRows ; i++){
             for (int j=0 ; j<numberOfColumns-3 ; j++){
                 Cell cell = cells[i][j];
-                if(cell.empty == true){
-                    if(cells[i][j].empty == true && cells[i][j+1].empty == true
-                            && cells[i][j+2].empty == true && cells[i][j+3].empty == true){
+                if(cell.player == player){
+                    if(cells[i][j].player== player && cells[i][j+1].player== player
+                            && cells[i][j+2].player== player && cells[i][j+3].player== player){
                         horizontalCount++;
                     }
                 }
@@ -119,9 +42,9 @@ public class BoardLogic {
         for(int i=0 ; i<numberOfRows-3 ; i++){
             for (int j=0 ; j<numberOfColumns ; j++){
                 Cell cell = cells[i][j];
-                if(cell.empty == true){
-                    if(cells[i][j].empty == true && cells[i+1][j].empty == true
-                            && cells[i+2][j].empty == true && cells[i+3][j].empty == true){
+                if(cell.player == player){
+                    if(cells[i][j].player== player && cells[i+1][j].player== player
+                            && cells[i+2][j].player== player && cells[i+3][j].player== player){
                         verticalCount++;
                     }
                 }
@@ -137,9 +60,9 @@ public class BoardLogic {
         for(int i=3 ; i<numberOfRows ; i++){
             for (int j=0 ; j<numberOfColumns-3 ; j++){
                 Cell cell = cells[i][j];
-                if(cell.empty == true){
-                    if(cells[i][j].empty == true && cells[i-1][j+1].empty == true
-                            && cells[i-2][j+2].empty == true && cells[i-3][j+3].empty == true){
+                if(cell.player == player){
+                    if(cells[i][j].player== player && cells[i-1][j+1].player== player
+                            && cells[i-2][j+2].player== player && cells[i-3][j+3].player== player){
                         ascendingDiagonalCount++;
                     }
                 }
@@ -156,11 +79,11 @@ public class BoardLogic {
         for(int i=3 ; i<numberOfRows ; i++){
             for (int j=3 ; j<numberOfColumns ; j++){
                 Cell cell = cells[i][j];
-                if(cell.empty == true){
+                if(cell.player == player){
                     String t = i+3 +"";
                     Log.d("dsi", t);
-                    if(cells[i][j].empty == true && cells[i-1][j-1].empty == true
-                            && cells[i-2][j-2].empty == true && cells[i-3][j-3].empty == true){
+                    if(cells[i][j].player== player && cells[i-1][j-1].player== player
+                            && cells[i-2][j-2].player== player && cells[i-3][j-3].player== player){
                         descendingDiagonalCount++;
                     }
                 }
@@ -187,18 +110,15 @@ public class BoardLogic {
     public int evalulationFunction(){
 
         winCount = 0;
-        if(checkForWin()){
-            winCount = 10000;
-            return  winCount;
-        }
-        else {
-            winCount = horizontalCheckCount() + verticalCheckCount()
+
+        fillCellsWithCurrentPlayer();
+        winCount = horizontalCheckCount() + verticalCheckCount()
                     + ascendingDiagonalCheckCount() + descendingDiagonalCheckCount();
 
-            String t = winCount +"";
-            Log.d("winCount", t);
-            return  winCount;
-        }
+        String t = winCount +"";
+        Log.d("winCount", t);
+        return  winCount;
+
 
     }
 
