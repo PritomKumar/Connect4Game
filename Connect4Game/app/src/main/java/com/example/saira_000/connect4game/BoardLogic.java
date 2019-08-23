@@ -185,7 +185,17 @@ public class BoardLogic {
         cells[row][col].setPlayer(player);
     }
 
-    
+    public void fillCellsWithCurrentPlayer(){
+
+        for (int row = 0; row < numberOfRows; row++) {
+            for (int col = 0; col < numberOfColumns; col++) {
+                if(cells [row][col].empty){
+                    cells [row][col].setPlayer(player);
+                }
+            }
+        }
+
+    }
     public int evalulationFunction(){
 
         winCount = 0;
@@ -194,7 +204,10 @@ public class BoardLogic {
             return  winCount;
         }
         else {
-
+            fillCellsWithCurrentPlayer();
+            winCount = horizontalCheckCount() + verticalCheckCount()
+                    + ascendingDiagonalCheckCount() + descendingDiagonalCheckCount();
+            return  winCount;
         }
 
     }
