@@ -2,6 +2,8 @@ package com.example.saira_000.connect4game;
 
 import android.util.Log;
 
+import java.util.Stack;
+
 import static android.bluetooth.BluetoothHidDeviceAppQosSettings.MAX;
 
 public class AIPlayer {
@@ -92,6 +94,30 @@ public class AIPlayer {
         else return value;
     }
 
+    public  void printNode(Cell[][] cells){
+
+        String test = "" ;
+        for (int row = 0; row < numberOfRows; row++) {
+            test = test + "\n";
+            for (int col = 0; col < numberOfColumns; col++) {
+                if(cells[row][col].empty){
+                    test = test + " 0 " ;
+                }
+                else if(cells[row][col] == null){
+                    test = test + " 6 " ;
+                }
+                else{
+                    test = test + " 1 ";
+                }
+            }
+
+        }
+
+        Log.d("node", test);
+    }
+
+    private Stack< Node > dfs = new Stack<Node> ();
+
     public int miniMax(Node current ,int depth , boolean maximizingPlayer){
 
         BoardLogic boardLogic = new BoardLogic(current.player , current.cells , 6 , 7 );
@@ -99,11 +125,14 @@ public class AIPlayer {
             return boardLogic.evalulationFunction();
         }
 
+        //printNode(current.cells);
+
         if(maximizingPlayer){
             int bestValue = -999999;
             for (int col =0 ; col < numberOfColumns ; col++){
                 Cell [][] tempCell = current.cells;
                 int row = lastAvailableRow(col,tempCell);
+
 
                 String t = "col =  " + col  +" row " + row;
                 Log.d("maxmin", t);
@@ -114,6 +143,7 @@ public class AIPlayer {
                     String t2 = "col =  " + col  +" row " + row;
                     Log.d("occupy", t2);
                     int value = miniMax(newNode , depth-1 , false);
+
                     String t3 = value+"";
                     Log.d("value", t3);
                     bestValue = maxValue(bestValue , value);
@@ -127,6 +157,8 @@ public class AIPlayer {
             int bestValue = 999999;
             for (int col =0 ; col < numberOfColumns ; col++){
                 Cell [][] tempCell = current.cells;
+                printNode(current.cells);
+
                 int row = lastAvailableRow(col,tempCell);
                 String t = "col =  " + col  +" row " + row;
                 Log.d("min", t);
