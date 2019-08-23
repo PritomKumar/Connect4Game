@@ -5,6 +5,7 @@ public class AIPlayer {
     private BoardLogic boardLogic;
     private Board.Turn newplayer;
     private Node currentNode;
+    Node head , tail;
     private int numberOfColumns=7;
     private int numberOfRows=6;
     private Cell[][] tempCell;
@@ -76,7 +77,7 @@ public class AIPlayer {
                 int row = lastAvailableRow(col,tempCell);
                 if(row!=-1){
                     Cell [][] newCells  = occupyCell(current.player  , row , col , tempCell);
-                    insertNewNode(col , current , newCells );
+                    Node newNode = insertNewNode(col , current , newCells );
                 }
 
             }
@@ -90,6 +91,10 @@ public class AIPlayer {
     public Node insertNewNode(int col, Node current , Cell [][] newCells) {
 
         newplayer = toggleTurn(current.player);
+        Node newNode = new Node(newCells , newplayer );
 
+        current.column[col] = newNode;
+        newNode.parent = current;
+        return  newNode;
     }
 }
