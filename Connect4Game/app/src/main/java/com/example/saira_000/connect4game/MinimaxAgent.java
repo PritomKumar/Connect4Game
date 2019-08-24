@@ -28,27 +28,27 @@ class MinimaxAgent {
 	{
 		ArrayList<Integer> children = new ArrayList<Integer>();
 		if(d == 0)
-			return st.evaluationFunction();
+			return st.evaluationFunction(st);
 		else
 		{
 			children = st.getLegalActions();
-			double v = -10000000;
+			double bestValue = -10000000;
 
-			double z;
-			//double z;
+			double value;
+			//double value;
 			for(int i =0; i<children.size();i++){
 
 				String temp = children.get(i) + "";
 				Log.d("chil", temp );
-				z = min_value(st.generateSuccessor(Board.Turn.PLAYER_1,children.get(i)),d);
-				if(z >= v)
+				value = min_value(st.generateSuccessor(Board.Turn.PLAYER_2,children.get(i)),d-1);
+				if(value >= bestValue)
 				{
-					v =z;
+					bestValue =value;
 					this.x = i;
 				}
 			}
 			//System.out.println("x: "+this.x);
-			return v;
+			return bestValue;
 		}
 	}
 	
@@ -58,25 +58,26 @@ class MinimaxAgent {
 		
 		ArrayList<Integer> children = new ArrayList<Integer>();
 		if(d == 0)
-		return st.evaluationFunction();
+		return st.evaluationFunction(st);
 		else
 		{
 			children = st.getLegalActions();
 
-			double v = 10000000;
+			double bestValue = 10000000;
 			int x=0;
-			double z;
+			double value;
 			for(int i =0; i<children.size();i++)
 			{
 
 				String temp = children.get(i) + "";
 				Log.d("chip", temp );
-				z= max_value(st.generateSuccessor(Board.Turn.PLAYER_2,children.get(i)),d-1);
-				if(z <= v)
-					v=z;
+				value= max_value(st.generateSuccessor(Board.Turn.PLAYER_1,children.get(i)),d-1);
+				if(value <= bestValue) {
+					bestValue = value;
+				}
 
 			}
-			return v;
+			return bestValue;
 		}
 	}
 	

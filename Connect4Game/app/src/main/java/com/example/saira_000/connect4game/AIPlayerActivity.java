@@ -22,6 +22,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
     private ImageView[][] cells;
     private View boardView;
     private Board board;
+    private  State state;
     private BoardLogic boardLogic;
     private AIPlayer aiPlayer;
     private AIPlayerActivity.ViewHolder viewHolder;
@@ -40,6 +41,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_aiplayer);
         board = new Board(numberOfRows,numberOfColumns);
+        state = new State(numberOfRows,numberOfColumns);
         boardView = findViewById(R.id.game_board);
         buildCells();
         playerTouch();
@@ -123,9 +125,9 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
     }
 
     private void dropDisc(int col) throws CloneNotSupportedException {
-        if (board.winCondition)
+        if (state.winCondition)
             return;
-        int row = board.lastAvailableRow(col);
+        int row = state.lastAvailableRow(col);
         if (row == -1) {
             return;
         }
@@ -143,9 +145,9 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         cell.startAnimation(animation);
 
         onEnterAnimationComplete();
-        board.occupyCell(row, col);
+        state.occupyCell(row, col);
 
-        if (board.checkForWin()) {
+        if (state.checkForWin()) {
             win();
         } else {
 
@@ -155,7 +157,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
 
     private void win() {
         int color;
-        if( board.turn == Board.Turn.PLAYER_1 ) {
+        if( state.turn == Board.Turn.PLAYER_1 ) {
             color = Color.RED;
             player1Score ++;
         }
@@ -167,7 +169,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         viewHolder.player1Win.setText(temp);
         temp = player2Score + "";
         viewHolder.player2Win.setText(temp);
-        if(board.turn == Board.Turn.PLAYER_1){
+        if(state.turn == Board.Turn.PLAYER_1){
             viewHolder.winnerText.setText("YOU WIN!!!");
         }
         else{
@@ -180,21 +182,19 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
 
     private void aiTurn() throws CloneNotSupportedException {
 
-        if(board.turn==Board.Turn.PLAYER_2) {
+        if(state.turn==Board.Turn.PLAYER_2) {
 
             Cell [][] newCells = new Cell[numberOfRows][numberOfColumns];
-            aiPlayer.printNode(board.cells);
+            aiPlayer.printNode(state.board);
             Board newBoard = (Board) this.board.clone();
             Board oldBoard = this.board;
             copyBoard(newCells , newBoard.cells);
 
-            State s =  new State(numberOfRows,numberOfColumns , newBoard.cells);
+            State newState =  new State(numberOfRows,numberOfColumns );
 
+            int randomInt = aiPlayer.mediumLevel(newState);
 
-
-            int randomInt = aiPlayer.mediumLevel(s);
-
-            aiPlayer.printNode(board.cells);
+            aiPlayer.printNode(state.board);
             int col = aiColTest(randomInt);
             board = oldBoard;
             //dropDisc(col);
@@ -222,9 +222,9 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
     }
 
     private void toggleTurn() throws CloneNotSupportedException {
-        board.toggleTurn();
+        state.toggleTurn();
         viewHolder.turnIndicatorImageView.setImageResource(resourceForTurn());
-        if(board.turn==Board.Turn.PLAYER_2) {
+        if(state.turn==Board.Turn.PLAYER_2) {
             aiTurn();
         }
     }
@@ -246,7 +246,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
 
 
     private int resourceForTurn() {
-        switch (board.turn) {
+        switch (state.turn) {
             case PLAYER_1:
                 return R.drawable.red;
             case PLAYER_2:
@@ -256,7 +256,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
     }
 
     private void reset() {
-        board.reset();
+        state.reset();
         viewHolder.winnerText.setVisibility(View.GONE);
         viewHolder.turnIndicatorImageView.setImageResource(resourceForTurn());
         for (int i=0; i<numberOfRows; i++) {

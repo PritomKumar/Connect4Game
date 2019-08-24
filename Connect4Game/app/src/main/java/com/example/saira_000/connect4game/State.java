@@ -10,10 +10,13 @@ class State implements Cloneable
 {
 
 	int numberOfRows, numberOfColumns;
-	Cell[][] board; // Char as . or X or O
+	Cell[][] board; // Char as . or X or
+	public boolean winCondition;
+
+	Board.Turn turn;
 
 	/* basic methods for constructing and proper hashing of State objects */
-	public State(int n_rows, int n_cols , Cell [][] newBoard){
+	public State(int n_rows, int n_cols ){
 		this.numberOfRows = n_rows;
 		this.numberOfColumns = n_cols;
 		this.board=new Cell[n_rows][n_cols];
@@ -24,12 +27,8 @@ class State implements Cloneable
 				this.board[i][j] = new Cell();
 			}
 		}
+		reset();
 
-		for(int i=0; i < n_rows; i++) {
-			for (int j = 0; j < n_cols; j++) {
-				this.board[i][j] = newBoard[i][j];
-			}
-		}
 
 	}
 	
@@ -52,7 +51,7 @@ class State implements Cloneable
 	
 	// Prototype Pattern Here.
 	public Object clone() throws CloneNotSupportedException {
-        State new_state = new State(this.numberOfRows, this.numberOfColumns , this.board);
+        State new_state = new State(this.numberOfRows, this.numberOfColumns );
 		for (int i = 0; i< this.numberOfRows; i++) {
 			new_state.board[i] = (Cell[]) this.board[i].clone();
 
@@ -66,9 +65,11 @@ class State implements Cloneable
 	public ArrayList<Integer> getLegalActions(){
 		ArrayList<Integer> actions = new ArrayList<Integer>();
 		for(int j=0; j < this.numberOfColumns; j++) {
-			if (this.board[0][j].empty==true) {
+
+			if(lastAvailableRow(j)!=-1) {
 				actions.add(j);
 			}
+
 		}
 		return actions;
 	}
@@ -77,26 +78,12 @@ class State implements Cloneable
 	performing an action (parameter) on the current state */
 	public State generateSuccessor(Board.Turn agent, int action) throws CloneNotSupportedException{
 		
-		int row=0;
-		for(row=0; row<this.numberOfRows && this.board[row][action].player != Board.Turn.PLAYER_1 &&
-				this.board[row][action].player != Board.Turn.PLAYER_2 ; row++);
-		State new_state=(State)this.clone();
-		if(row==0) row =1;
-		new_state.board[row-1][action].setPlayer(agent);
-		
+		int row= lastAvailableRow(action);
+		State new_state = (State) this.clone();
+		if(row!=-1) {
+			new_state.board[row][action].setPlayer(agent);
+		}
 		return new_state;
-	}
-	
-	/* Print's the current state's board in a nice pretty way */
-	public void printBoard(){	
-		System.out.println(new String(new char[this.numberOfColumns*2]).replace('\0', '-'));
-		for(int i=0; i<this.numberOfRows; i++){
-			for(int j=0; j<this.numberOfColumns; j++){
-				System.out.print(this.board[i][j]+" ");
-			}
-			System.out.println();
-		}	
-		System.out.println(new String(new char[this.numberOfColumns*2]).replace('\0', '-'));
 	}
 
 
@@ -190,14 +177,74 @@ class State implements Cloneable
 	/* returns the value of each state for minimax to min/max over at
 	zero depth. Right now it's pretty trivial, looking for only goal states.
 	(This would be perfect for infinite depth minimax. Not so great for d=2) */
-	public double evaluationFunction(){
-	
-		if (this.isGoal(Board.Turn.PLAYER_1))
-			return 1000.0;
-		if (this.isGoal(Board.Turn.PLAYER_2))
-			return -1000.0;
-		
-		return 0.0;
+	public double evaluationFunction(State st) {
+
+		BoardLogic logic = new BoardLogic(turn , st.board , numberOfRows , numberOfColumns);
+		double value = logic.evalulationFunction();
+
+		if(st.turn == Board.Turn.PLAYER_2) {
+			if (this.isGoal(st.turn )) {
+				return 1000.0;
+
+			}
+			else{
+				return value;
+			}
+		}
+
+		else {
+			if (this.isGoal( Board.Turn.PLAYER_1 )) {
+				return -1000.0;
+
+			}
+			else{
+				value = -value;
+				return value;
+			}
+		}
+	}
+
+	public void reset() {
+		winCondition = false;
+		turn = Board.Turn.PLAYER_1;
+		for (int row = 0; row < numberOfRows; row++) {
+			for (int col = 0; col < numberOfColumns; col++) {
+				board [row][col] = new Cell();
+			}
+		}
+	}
+
+
+
+	public int lastAvailableRow(int col) {
+		for (int row = numberOfRows - 1; row >= 0; row--) {
+			if (board[row][col].empty) {
+				return row;
+			}
+		}
+		return -1;
+	}
+
+	public void occupyCell( int row , int col) {
+
+		board[row][col].setPlayer(turn);
+	}
+
+	public void toggleTurn() {
+		if (turn == Board.Turn.PLAYER_1) {
+			turn = Board.Turn.PLAYER_2;
+		} else {
+			turn = Board.Turn.PLAYER_1;
+		}
+	}
+
+	public boolean checkForWin() {
+		BoardLogic boardLogic = new BoardLogic(turn , board , numberOfRows , numberOfColumns);
+
+		if(boardLogic.checkForWin()){
+			winCondition = true;
+		}
+		return  boardLogic.checkForWin();
 	}
 }
 	
