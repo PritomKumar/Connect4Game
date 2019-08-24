@@ -17,6 +17,8 @@ public class AIPlayer {
     private int numberOfColumns=7;
     private int numberOfRows=6;
 
+    ArrayList <Node> possibleValues = new ArrayList<Node>();
+
     public AIPlayer() {
 
         createLinkedList();
@@ -39,6 +41,8 @@ public class AIPlayer {
 
     public int mediumLevel(Cell [][] currentCell){
 
+        currentNode = new Node(currentCell,Board.Turn.PLAYER_2);
+        int l = Minimax(currentNode , 2 , Board.Turn.PLAYER_2);
         return 0;
     }
 
@@ -138,5 +142,36 @@ public class AIPlayer {
         Log.d("node", test);
     }
 
+    public int Minimax(Node node, int depth, Board.Turn player) {
+
+        BoardLogic logic = new BoardLogic(node.getPlayer(), node.getstate() , numberOfRows , numberOfColumns);
+        if(depth == 0 || logic.checkForWin()){
+            return logic.evalulationFunction();
+        }
+
+        if (player == Board.Turn.PLAYER_1){
+            node.setUtility(Integer.MIN_VALUE);
+            for(Node n : node.expandNode(Board.Turn.PLAYER_1)){
+                //printNode(n.getstate());
+
+                n.setUtility(Minimax(n, depth -1 ,Board.Turn.PLAYER_2));
+                node.setUtility(Math.max(n.getUtility(), node.getUtility()));
+                String t = n.getUtility() + "";
+                Log.d("uti" ,t);
+            }
+            return node.getUtility();
+        }
+        else{
+            node.setUtility(Integer.MAX_VALUE);
+            for(Node n : node.expandNode(Board.Turn.PLAYER_2)){
+                //printNode(n.getstate());
+                n.setUtility(Minimax(n, depth -1 ,Board.Turn.PLAYER_1));
+                node.setUtility(Math.min(n.getUtility(), node.getUtility()));
+                if (depth == 1)
+                    possibleValues.add(n);
+            }
+            return node.getUtility();
+        }
+    }
 
 }

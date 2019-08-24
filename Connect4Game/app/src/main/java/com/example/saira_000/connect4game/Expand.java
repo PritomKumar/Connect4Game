@@ -6,6 +6,7 @@ public class Expand {
 
     int numberOfRows = 6;
     int numberOfColumns = 7;
+
     public void fullBoardCells (Cell [][] cells){
         for(int row = 0 ; row < numberOfRows ; row++){
             for(int col = 0 ; col < numberOfColumns ; col++){
@@ -20,8 +21,8 @@ public class Expand {
         ArrayList<Node> frontier= new ArrayList<Node>();
         for(int j=0; j < numberOfColumns; j++)  {
             if(currentBoard[0][j].empty==true) {
-                Node node = new Node(AddChild(currentBoard,j,player));
-                node.Setscore(j);
+                Node node = new Node(AddChild(currentBoard,j,player) , player);
+                node.setScore(j);
                 frontier.add(node);
             }
         }
@@ -30,22 +31,22 @@ public class Expand {
 
 
     public Cell[][] AddChild(Cell[][] currentBoard, int j, Board.Turn player) {
-        Cell[][] ChildcurrentBoard = new Cell[numberOfRows][numberOfColumns];
-        fullBoardCells(ChildcurrentBoard);
+        Cell[][] childBoard = new Cell[numberOfRows][numberOfColumns];
+        fullBoardCells(childBoard);
 
         for(int i=0; i<numberOfRows; i++)
             for(int k=0; k<numberOfColumns; k++)
-                ChildcurrentBoard[i][k]= currentBoard[i][k];
+                childBoard[i][k]= currentBoard[i][k];
 
         for(int i = numberOfRows-1; i >= 0; i--) {
-            if(ChildcurrentBoard[i][j].empty==true) {
+            if(childBoard[i][j].empty==true) {
                 if(player == Board.Turn.PLAYER_1)
-                    ChildcurrentBoard[i][j].setPlayer(player);
+                    childBoard[i][j].setPlayer(player);
                 else
-                    ChildcurrentBoard[i][j].setPlayer(Board.Turn.PLAYER_2);
+                    childBoard[i][j].setPlayer(Board.Turn.PLAYER_2);
                 break;
             }
         }
-        return ChildcurrentBoard;
+        return childBoard;
     }
 }

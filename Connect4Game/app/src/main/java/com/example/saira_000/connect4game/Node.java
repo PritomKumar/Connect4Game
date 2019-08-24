@@ -7,36 +7,46 @@ public class Node implements Serializable {
 
     private int utility;
     private Cell[][] state;
+    private  Board.Turn player2;
     private Expand expand = new Expand();
     private int score;
 
-    public Node(Cell[][] state){
+    public Node(Cell[][] state , Board.Turn player){
         this.state= state;
+        this.player2 = player;
     }
 
-    public Cell[][] Getstate(){
+    public Cell[][] getstate(){
         return state;
     }
 
-    public double Getutility(){
+    public int getUtility(){
         return utility;
     }
 
-    public void Setutility(int utility){
+    public void setUtility(int utility){
         this.utility = utility;
     }
 
-    public int Getscore(){
+    public int getScore(){
         return score;
     }
 
-    public void Setscore(int move){
+    public void setScore(int move){
         this.score = move;
     }
 
-    public List<Node> Expand(boolean Player)
+    public Board.Turn getPlayer() {
+        return player2;
+    }
+
+    public void setPlayer(Board.Turn player) {
+        this.player2 = player;
+    }
+
+    public List<Node> expandNode(Board.Turn player)
     {
-        return expand.MakeChildren(state, Player);
+        return expand.MakeChildren(state, player);
     }
 
 }
