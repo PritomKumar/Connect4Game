@@ -1,11 +1,15 @@
+package com.example.saira_000.connect4game;
+
+import android.util.Log;
+
 import java.util.ArrayList;
 
-class minimaxAgent{
+class MinimaxAgent {
 	
 	int depth;
 	int x=0;
 	
-	public minimaxAgent(int depth)
+	public MinimaxAgent(int depth)
 	{
 		this.depth = depth;
 	}	
@@ -24,25 +28,27 @@ class minimaxAgent{
 	{
 		ArrayList<Integer> children = new ArrayList<Integer>();
 		if(d == 0)
-		return st.evaluationFunction();
+			return st.evaluationFunction();
 		else
 		{
-		children = st.getLegalActions();
-		double v = -10000000;
-		
-		double z;
-		//double z;
-		for(int i =0; i<children.size();i++)
-		{
-			z = min_value(st.generateSuccessor('O',children.get(i)),d);
-			if(z >= v)
-			{
-				v =z;
-				this.x = i;
+			children = st.getLegalActions();
+			double v = -10000000;
+
+			double z;
+			//double z;
+			for(int i =0; i<children.size();i++){
+
+				String temp = children.get(i) + "";
+				Log.d("chil", temp );
+				z = min_value(st.generateSuccessor(Board.Turn.PLAYER_1,children.get(i)),d);
+				if(z >= v)
+				{
+					v =z;
+					this.x = i;
+				}
 			}
-		}
-		//System.out.println("x: "+this.x);
-		return v;
+			//System.out.println("x: "+this.x);
+			return v;
 		}
 	}
 	
@@ -55,19 +61,22 @@ class minimaxAgent{
 		return st.evaluationFunction();
 		else
 		{
-		children = st.getLegalActions();
-		
-		double v = 10000000;
-		int x=0;
-		double z;
-		for(int i =0; i<children.size();i++)
-		{
-			z= max_value(st.generateSuccessor('X',children.get(i)),d-1);
-			if(z <= v)
-				v=z;
-		
-		}
-		return v;
+			children = st.getLegalActions();
+
+			double v = 10000000;
+			int x=0;
+			double z;
+			for(int i =0; i<children.size();i++)
+			{
+
+				String temp = children.get(i) + "";
+				Log.d("chip", temp );
+				z= max_value(st.generateSuccessor(Board.Turn.PLAYER_2,children.get(i)),d-1);
+				if(z <= v)
+					v=z;
+
+			}
+			return v;
 		}
 	}
 	

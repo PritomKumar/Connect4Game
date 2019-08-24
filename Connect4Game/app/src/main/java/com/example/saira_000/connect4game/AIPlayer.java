@@ -2,13 +2,7 @@ package com.example.saira_000.connect4game;
 
 import android.util.Log;
 
-import java.io.Serializable;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Stack;
-
-import static android.bluetooth.BluetoothHidDeviceAppQosSettings.MAX;
 
 public class AIPlayer {
     private Board.Turn newplayer;
@@ -39,11 +33,20 @@ public class AIPlayer {
         return 0 ;
     }
 
-    public int mediumLevel(Cell [][] currentCell){
+    public int mediumLevel(Cell [][] currentCell) throws CloneNotSupportedException {
 
         currentNode = new Node(currentCell,Board.Turn.PLAYER_2);
-        int l = Minimax(currentNode , 2 , Board.Turn.PLAYER_2);
-        return 0;
+        MinimaxAgent minimaxAgent = new MinimaxAgent(2);
+        State s=new State(numberOfRows,numberOfColumns , currentCell);
+
+        State newState = (State) s.clone();
+
+        int action = minimaxAgent.getAction(newState);
+        String t = action+ "";
+        Log.d("action" , t);
+
+        printNode(currentCell);
+        return action;
     }
 
     public int hardLevel(){
@@ -142,6 +145,9 @@ public class AIPlayer {
         Log.d("node", test);
     }
 
+
+    /*
+
     public int Minimax(Node node, int depth, Board.Turn player) {
 
         BoardLogic logic = new BoardLogic(node.getPlayer(), node.getstate() , numberOfRows , numberOfColumns);
@@ -173,5 +179,5 @@ public class AIPlayer {
             return node.getUtility();
         }
     }
-
+*/
 }

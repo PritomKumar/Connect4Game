@@ -71,7 +71,11 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         String temp = view.getX() + "";
        // Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
         if (col != -1) {
-            dropDisc(col);
+            try {
+                dropDisc(col);
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -89,7 +93,11 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
                             String temp = motionEvent.getX() + "";
                             //Toast.makeText(AIPlayerActivity.this, temp, Toast.LENGTH_SHORT).show();
                             if (col != -1) {
-                                dropDisc(col);
+                                try {
+                                    dropDisc(col);
+                                } catch (CloneNotSupportedException e) {
+                                    e.printStackTrace();
+                                }
                             } 
                         }
                     }
@@ -114,7 +122,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void dropDisc(int col) {
+    private void dropDisc(int col) throws CloneNotSupportedException {
         if (board.winCondition)
             return;
         int row = board.lastAvailableRow(col);
@@ -170,21 +178,41 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
     }
 
 
-    private void aiTurn() {
+    private void aiTurn() throws CloneNotSupportedException {
 
         if(board.turn==Board.Turn.PLAYER_2) {
-            int randomInt = aiPlayer.mediumLevel(board.cells);
+
+            Cell [][] newCells = new Cell[numberOfRows][numberOfColumns];
+
+            copyBoard(newCells , board.cells);
+
+            int randomInt = aiPlayer.mediumLevel(newCells);
             int col = aiColTest(randomInt);
             //dropDisc(col);
             String temp = col + "";
-           // Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
+            Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
             if (col != -1){
                 dropDisc(col);
             }
         }
     }
 
-    private void toggleTurn() {
+    private void copyBoard(Cell[][] newCells, Cell[][] cells) {
+
+        for(int i= 0 ; i< numberOfRows ; i++){
+            for (int j=0 ; j< numberOfColumns ; j++){
+                newCells[i][j] = new Cell();
+            }
+        }
+
+        for(int i= 0 ; i< numberOfRows ; i++){
+            for (int j=0 ; j< numberOfColumns ; j++){
+                newCells[i][j] = cells[i][j];
+            }
+        }
+    }
+
+    private void toggleTurn() throws CloneNotSupportedException {
         board.toggleTurn();
         viewHolder.turnIndicatorImageView.setImageResource(resourceForTurn());
         if(board.turn==Board.Turn.PLAYER_2) {
