@@ -1,46 +1,42 @@
 package com.example.saira_000.connect4game;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Node implements Serializable {
 
-    private int numberOfColumns=7;
-    private int numberOfRows=6;
-    private BoardLogic boardLogic;
-    public boolean winCondition;
-    public Cell[][] cells;
-    public int score;
+    private int utility;
+    private Cell[][] state;
+    private Expand expand = new Expand();
+    private int score;
 
-    public Node parent ;
-    public Node [] column;
-
-    public Board.Turn player;
-
-    public Node(Cell[][] currentBoard , Board.Turn turn) {
-
-        cells = new Cell[numberOfRows][numberOfColumns];
-        column = new Node[numberOfColumns];
-        player = turn;
-        initialState(currentBoard);
+    public Node(Cell[][] state){
+        this.state= state;
     }
 
-    public void initialState(Cell[][] currentBoard){
-
-        for(int col = 0 ; col < numberOfColumns ; col++){
-            column[col] = null;
-        }
-        for (int row = 0; row < numberOfRows; row++) {
-            for (int col = 0; col < numberOfColumns; col++) {
-                cells [row][col] = new Cell();
-            }
-        }
-
-        for (int row = 0; row < numberOfRows; row++) {
-            for (int col = 0; col < numberOfColumns; col++) {
-                cells [row][col] = currentBoard[row][col];
-            }
-        }
+    public Cell[][] Getstate(){
+        return state;
     }
 
+    public double Getutility(){
+        return utility;
+    }
+
+    public void Setutility(int utility){
+        this.utility = utility;
+    }
+
+    public int Getscore(){
+        return score;
+    }
+
+    public void Setscore(int move){
+        this.score = move;
+    }
+
+    public List<Node> Expand(boolean Player)
+    {
+        return expand.MakeChildren(state, Player);
+    }
 
 }
