@@ -1,12 +1,15 @@
 package com.example.saira_000.connect4game;
 
-public class Node {
+import java.io.Serializable;
+
+public class Node implements Serializable {
 
     private int numberOfColumns=7;
     private int numberOfRows=6;
     private BoardLogic boardLogic;
     public boolean winCondition;
     public Cell[][] cells;
+    public int score;
 
     public Node parent ;
     public Node [] column;

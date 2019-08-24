@@ -2,6 +2,8 @@ package com.example.saira_000.connect4game;
 
 import android.util.Log;
 
+import java.io.Serializable;
+
 import java.util.Stack;
 
 import static android.bluetooth.BluetoothHidDeviceAppQosSettings.MAX;
@@ -204,6 +206,8 @@ public class AIPlayer {
 
     public void createAllChild(Node current){
 
+        Node cur ;
+
         Cell[][] tempNodeCell = current.cells;
         for(int col =0 ; col< numberOfColumns ; col++){
 
@@ -213,14 +217,15 @@ public class AIPlayer {
 
                 Board.Turn nPlayer = toggleTurn(current.player);
                 Node newNode = new Node(tempCell , nPlayer);
+                printNode(newNode.cells);
                 current.column[col] = newNode;
-                //tempCell = unOccupyCell(current.player , row , col , tempNodeCell );
+                tempCell = unOccupyCell(current.player , row , col , tempNodeCell );
 
             }
         }
 
         for(int col =0 ; col< numberOfColumns ; col++){
-            printNode(current.column[col].cells);
+            //printNode(current.column[col].cells);
         }
 
     }
@@ -230,7 +235,9 @@ public class AIPlayer {
         iteration++;
         BoardLogic boardLogic = new BoardLogic(current.player , current.cells , 6 , 7 );
         if(depth ==0){
-            return boardLogic.evalulationFunction();
+
+            current.score = boardLogic.evalulationFunction();
+            return current.score;
         }
 
         //printNode(current.cells);
