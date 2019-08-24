@@ -31,6 +31,15 @@ public class Board {
         }
     }
 
+    public Object clone() throws CloneNotSupportedException {
+        Board newBoard = new Board(this.numberOfRows, this.numberOfColumns );
+        for (int i = 0; i< this.numberOfRows; i++) {
+            newBoard.cells[i] = (Cell[]) this.cells[i].clone();
+
+        }
+        return newBoard;
+    }
+
     public int lastAvailableRow(int col) {
         for (int row = numberOfRows - 1; row >= 0; row--) {
             if (cells[row][col].empty) {

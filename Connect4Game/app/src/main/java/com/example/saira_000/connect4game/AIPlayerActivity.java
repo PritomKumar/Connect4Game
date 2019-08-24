@@ -183,11 +183,20 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         if(board.turn==Board.Turn.PLAYER_2) {
 
             Cell [][] newCells = new Cell[numberOfRows][numberOfColumns];
+            aiPlayer.printNode(board.cells);
+            Board newBoard = (Board) this.board.clone();
+            Board oldBoard = this.board;
+            copyBoard(newCells , newBoard.cells);
 
-            copyBoard(newCells , board.cells);
+            State s =  new State(numberOfRows,numberOfColumns , newBoard.cells);
 
-            int randomInt = aiPlayer.mediumLevel(newCells);
+
+
+            int randomInt = aiPlayer.mediumLevel(s);
+
+            aiPlayer.printNode(board.cells);
             int col = aiColTest(randomInt);
+            board = oldBoard;
             //dropDisc(col);
             String temp = col + "";
             Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();

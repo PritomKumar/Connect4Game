@@ -33,19 +33,17 @@ public class AIPlayer {
         return 0 ;
     }
 
-    public int mediumLevel(Cell [][] currentCell) throws CloneNotSupportedException {
+    public int mediumLevel(State state ) throws CloneNotSupportedException {
 
-        currentNode = new Node(currentCell,Board.Turn.PLAYER_2);
         MinimaxAgent minimaxAgent = new MinimaxAgent(2);
-        State s=new State(numberOfRows,numberOfColumns , currentCell);
 
-        State newState = (State) s.clone();
+        State newState = (State) state.clone();
 
         int action = minimaxAgent.getAction(newState);
         String t = action+ "";
         Log.d("action" , t);
 
-        printNode(currentCell);
+        //printNode(state.board);
         return action;
     }
 
