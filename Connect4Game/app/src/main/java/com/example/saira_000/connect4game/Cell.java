@@ -1,11 +1,12 @@
 package com.example.saira_000.connect4game;
 
-public class Cell {
+import java.io.Serializable;
+
+public class Cell implements Serializable {
   public boolean empty = true;
   public Board.Turn player;
 
   public Cell() {
-
     empty = true;
   }
 
@@ -13,4 +14,5 @@ public class Cell {
     this.player = player;
     empty = false;
   }
+
 }

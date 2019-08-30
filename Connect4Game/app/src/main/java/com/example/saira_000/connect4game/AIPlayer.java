@@ -35,15 +35,16 @@ public class AIPlayer {
 
     public int mediumLevel(State state ) throws CloneNotSupportedException {
 
-        MinimaxAgent minimaxAgent = new MinimaxAgent(3);
+        MinimaxAgent minimaxAgent = new MinimaxAgent(2);
 
-        State newState = (State) state.clone();
-
+        State newState = new State(numberOfRows , numberOfColumns);
+        newState = state.deepClone();
+        printNode(newState.board);
         int action = minimaxAgent.getAction(newState);
         String t = action+ "";
         Log.d("action" , t);
 
-        //printNode(state.board);
+       // printNode(newState.board);
         return action;
     }
 

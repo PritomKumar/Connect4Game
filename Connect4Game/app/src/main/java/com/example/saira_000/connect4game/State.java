@@ -4,13 +4,20 @@ import android.util.Log;
 
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
+@SuppressWarnings("serial")
 
-class State implements Cloneable
+class State  implements Cloneable, Serializable
 {
 
 	int numberOfRows, numberOfColumns;
-	Cell[][] board; // Char as . or X or
+	Cell[][] board;
 	public boolean winCondition;
 
 	Board.Turn turn;
@@ -53,8 +60,7 @@ class State implements Cloneable
 	public Object clone() throws CloneNotSupportedException {
         State new_state = new State(this.numberOfRows, this.numberOfColumns );
 		for (int i = 0; i< this.numberOfRows; i++) {
-			new_state.board[i] = (Cell[]) this.board[i].clone();
-
+			new_state.board[i] =  this.board[i].clone();
 		}
 		return new_state;
 	}
@@ -73,7 +79,31 @@ class State implements Cloneable
 		}
 		return actions;
 	}
-	
+
+	public int drop(int col)
+	{
+		//Check if game has ended.
+		if (checkForWin())
+		{
+			return -1;
+		}
+		//Check col
+		int row = 5;
+		for ( ; row>=0 && board[row][col].empty; row--)
+		{}
+		// If the row is -1, then the col is already full.
+		if (row==-1)
+		{
+			return -1;
+		}
+		// Fill the row of the given col with player's checker.
+		else
+		{
+			board[row][col].setPlayer(turn);
+			return row;
+		}
+
+	}
 	/* returns a State object that is obtained by the agent (parameter)
 	performing an action (parameter) on the current state */
 	public State generateSuccessor(Board.Turn agent, int action) throws CloneNotSupportedException{
@@ -81,6 +111,7 @@ class State implements Cloneable
 		int row= lastAvailableRow(action);
 		State new_state = (State) this.clone();
 		if(row!=-1) {
+			new_state.turn = agent;
 			new_state.board[row][action].setPlayer(agent);
 		}
 		return new_state;
@@ -103,6 +134,24 @@ class State implements Cloneable
 		}
 		else {
 			return  false;
+		}
+	}
+
+	public State deepClone() {
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(this);
+
+			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+			ObjectInputStream ois = new ObjectInputStream(bais);
+			return (State) ois.readObject();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		} catch (ClassNotFoundException el) {
+			el.printStackTrace();
+			return null;
 		}
 	}
 
@@ -177,28 +226,32 @@ class State implements Cloneable
 	/* returns the value of each state for minimax to min/max over at
 	zero depth. Right now it's pretty trivial, looking for only goal states.
 	(This would be perfect for infinite depth minimax. Not so great for d=2) */
-	public double evaluationFunction(State st) {
+	public int evaluationFunction(State st) {
 
 		BoardLogic logic = new BoardLogic(turn , st.board , numberOfRows , numberOfColumns);
-		double value = logic.evalulationFunction();
+		int value = (int)logic.evalulationFunction();
 
 		if(st.turn == Board.Turn.PLAYER_2) {
 			if (this.isGoal(st.turn )) {
-				return 1000.0;
+				return 1000000;
 
 			}
 			else{
+				String t = value+ "";
+				Log.d("evalup" , t);
 				return value;
 			}
 		}
 
 		else {
 			if (this.isGoal( Board.Turn.PLAYER_1 )) {
-				return -1000.0;
+				return -1000000;
 
 			}
 			else{
 				value = -value;
+				String t = value+ "";
+				Log.d("evalue" , t);
 				return value;
 			}
 		}

@@ -6,77 +6,161 @@ import java.util.ArrayList;
 
 class MinimaxAgent {
 	
-	int depth;
+	int depth , maxDepth;
+	int [][] newGrid;
 	int x=0;
 	
 	public MinimaxAgent(int depth)
 	{
 		this.depth = depth;
+		this.maxDepth = depth;
 	}	
-	
-	
+
+	public int[][] translateCellToInt(Cell[][] copy ){
+		int [][] newGrid = new int[6][7];
+
+		for (int row = 0 ; row<6 ; row++){
+			for (int col = 0 ; col < 7 ; col++){
+				if(copy[row][col].player == Board.Turn.PLAYER_1){
+					newGrid[row][col] = 1;
+				}
+				else if(copy[row][col].player == Board.Turn.PLAYER_2){
+					newGrid[row][col] = 2;
+				}
+				else{
+					newGrid[row][col] = 0;
+				}
+			}
+		}
+
+
+		return  newGrid;
+	}
+
+	private int[][] copyGrid(int[][]copy)
+	{
+		int[][] newgrid = new int [7][6];
+		for (int row =0; row<6; row++)
+		{
+			for (int col=0; col<7; col++)
+			{
+				newgrid[col][row]=copy[col][row];
+			}
+		}
+		return newgrid;
+	}
+
+
 	public int getAction(State st) throws CloneNotSupportedException
 	{
-		double val = max_value(st, depth);
+		State newState = st.deepClone();
+
+		int val = max_value(newState, 0);
 		//return max_value(st, depth);
 		return x;
 		
 	}
 	
 	
-	public double max_value(State st, int d) throws CloneNotSupportedException
+	public int max_value(State st, int d) throws CloneNotSupportedException
 	{
-		ArrayList<Integer> children = new ArrayList<Integer>();
-		if(d == 0)
+
+		int bestValue = -10000000;
+		newGrid = translateCellToInt(st.board);
+		int bestPath =0;
+
+		if(d == maxDepth) {
 			return st.evaluationFunction(st);
+		}
 		else
 		{
-			children = st.getLegalActions();
-			double bestValue = -10000000;
+			for(int i = 0; i<7;i++){
 
-			double value;
-			//double value;
-			for(int i =0; i<children.size();i++){
+				//children = st.getLegalActions();
 
-				String temp = children.get(i) + "";
-				Log.d("chil", temp );
-				value = min_value(st.generateSuccessor(Board.Turn.PLAYER_2,children.get(i)),d-1);
-				if(value >= bestValue)
-				{
-					bestValue =value;
-					this.x = i;
+				State maxState = st.deepClone();
+				maxState.turn = Board.Turn.PLAYER_2;
+
+				int r= maxState.drop(i);
+
+				if(r!=-1){
+
+
+					if (d < maxDepth)
+					{
+
+						int v = min_value(maxState,+1);
+						if (v >=bestValue)
+						{
+							bestPath = i;
+							bestValue = v;
+						}
+					}
 				}
+
 			}
-			//System.out.println("x: "+this.x);
+		}
+
+		if (d==0)
+		{
+			//System.out.println("Turn end");
+			return bestPath;
+		}
+		else
+		{
+			//System.out.println(bestValue);
 			return bestValue;
 		}
 	}
 	
 	
-	public double min_value(State st, int d) throws CloneNotSupportedException
+	public int min_value(State st, int d) throws CloneNotSupportedException
 	{
-		
-		ArrayList<Integer> children = new ArrayList<Integer>();
-		if(d == 0)
-		return st.evaluationFunction(st);
+
+		int bestValue = 10000000;
+
+		int bestPath =0;
+
+		if(d == maxDepth) {
+			return st.evaluationFunction(st);
+		}
 		else
 		{
-			children = st.getLegalActions();
+			for(int i = 0; i<7;i++){
 
-			double bestValue = 10000000;
-			int x=0;
-			double value;
-			for(int i =0; i<children.size();i++)
-			{
+				//children = st.getLegalActions();
 
-				String temp = children.get(i) + "";
-				Log.d("chip", temp );
-				value= max_value(st.generateSuccessor(Board.Turn.PLAYER_1,children.get(i)),d-1);
-				if(value <= bestValue) {
-					bestValue = value;
+				State minState = st.deepClone();
+				minState.turn = Board.Turn.PLAYER_1;
+
+				int r= minState.drop(i);
+
+				if(r!=-1){
+
+
+					if (d < maxDepth)
+					{
+
+						int v = max_value(minState,+1);
+						if (v <=bestValue)
+						{
+							bestPath = i;
+							bestValue = v;
+						}
+					}
 				}
 
 			}
+		}
+
+		if (d==0)
+		{
+			//System.out.println("Turn end");
+			return bestPath;
+		}
+		else
+		{
+			//System.out.println(bestValue);
 			return bestValue;
 		}
 	}

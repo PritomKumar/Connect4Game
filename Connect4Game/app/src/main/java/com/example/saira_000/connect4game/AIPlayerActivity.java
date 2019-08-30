@@ -145,7 +145,8 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         cell.startAnimation(animation);
 
         onEnterAnimationComplete();
-        state.occupyCell(row, col);
+        state.generateSuccessor(state.turn , col);
+        //aiPlayer.printNode(state.board);
 
         if (state.checkForWin()) {
             win();
@@ -185,23 +186,21 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         if(state.turn==Board.Turn.PLAYER_2) {
 
             Cell [][] newCells = new Cell[numberOfRows][numberOfColumns];
-            aiPlayer.printNode(state.board);
-            Board newBoard = (Board) this.board.clone();
-            Board oldBoard = this.board;
-            copyBoard(newCells , newBoard.cells);
+            //aiPlayer.printNode(state.board);
 
-            State newState =  new State(numberOfRows,numberOfColumns );
+            State newState =  (State) state.deepClone();
 
-            int randomInt = aiPlayer.mediumLevel(newState);
+           // copyBoard(newState.board , state.board);
 
-            aiPlayer.printNode(state.board);
+            int randomInt = aiPlayer.mediumLevel(state);
+
             int col = aiColTest(randomInt);
-            board = oldBoard;
             //dropDisc(col);
             String temp = col + "";
             Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
             if (col != -1){
                 dropDisc(col);
+
             }
         }
     }
