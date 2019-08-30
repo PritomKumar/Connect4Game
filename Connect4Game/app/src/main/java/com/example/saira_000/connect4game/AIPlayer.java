@@ -10,6 +10,7 @@ public class AIPlayer {
     Node head , tail;
     private int numberOfColumns=7;
     private int numberOfRows=6;
+    private  int path ;
 
     ArrayList <Node> possibleValues = new ArrayList<Node>();
 
@@ -35,17 +36,20 @@ public class AIPlayer {
 
     public int mediumLevel(State state ) throws CloneNotSupportedException {
 
-        MinimaxAgent minimaxAgent = new MinimaxAgent(2);
+
 
         State newState = new State(numberOfRows , numberOfColumns);
         newState = state.deepClone();
         printNode(newState.board);
-        int action = minimaxAgent.getAction(newState);
-        String t = action+ "";
+
+        int bestMove = miniMaxAB(newState,2,-1000000,10000000,true);
+        int action = performBestMove(newState , bestMove);
+
+        String t =action+ "";
         Log.d("action" , t);
 
        // printNode(newState.board);
-        return action;
+        return path;
     }
 
     public int hardLevel(){
@@ -145,6 +149,64 @@ public class AIPlayer {
     }
 
 
+
+    private int miniMaxAB(State node, int depth, int alpha, int beta, boolean maximizingPlayer) {
+        ArrayList<State> children = new ArrayList<State>();
+        children= node.generateChildren();
+
+        String t2 = node.getScore() + "";
+        Log.d("scorenode", t2);
+
+        if(depth == 0 || node.checkForWin()){
+            return node.evaluationFunction(node);
+        }
+        if (maximizingPlayer) {
+            int v = -1000000000;
+            for (State child : children) {
+
+                //printNode(child.board);
+                v = Math.max(v, miniMaxAB(child, depth - 1, alpha, beta, false));
+                alpha = Math.max(alpha, v);
+                node.setScore(v);
+                path= v;
+                String t = child.getScore() + "";
+                Log.d("scoremax", t);
+                if (beta <= alpha) {
+                    break;
+                }
+            }
+            return v;
+        }
+
+        else {
+            int v = 1000000000;
+            for (State child : children) {
+               // printNode(child.board);
+
+                v = Math.min(v, miniMaxAB(child, depth - 1, alpha, beta, true));
+                beta = Math.min(beta, v);
+                node.setScore(v);
+                String t = child.getScore() + "";
+                Log.d("scoremin", t);
+                if (beta <= alpha) {
+                    break;
+                }
+            }
+            return v;
+        }
+
+    }
+
+    private int performBestMove(State root, int bestMove) {
+        ArrayList<State> children = root.getSuccessor();
+
+        for ( int i=0 ; i< children.size() ; i++) {
+            if (children.get(i).getScore() == bestMove) {
+                return children.get(i).getParent();
+            }
+        }
+        return  -1 ;
+    }
     /*
 
     public int Minimax(Node node, int depth, Board.Turn player) {

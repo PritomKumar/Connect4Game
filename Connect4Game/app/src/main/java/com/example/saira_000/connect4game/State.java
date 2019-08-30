@@ -19,6 +19,9 @@ class State  implements Cloneable, Serializable
 	int numberOfRows, numberOfColumns;
 	Cell[][] board;
 	public boolean winCondition;
+	private int score;
+	private int parent;
+	private ArrayList<State> successor;
 
 	Board.Turn turn;
 
@@ -34,18 +37,17 @@ class State  implements Cloneable, Serializable
 				this.board[i][j] = new Cell();
 			}
 		}
+		successor = new ArrayList<State>();
+		parent =-1;
 		reset();
 
 
 	}
 	
 	public boolean equals(Object obj){
-		//have faith and cast
+
 		State other=(State)obj;
 		return Arrays.deepEquals(this.board, other.board);
-		/* Arrays.deepEquals() is used to check whether two arrays of single dimensional or
-		 *multi-dimensional arrays are equal or not. 
-		 *It can compare two nested arrays (i.e. multidimensional array),.*/
 	}
 	
 	public int hashCode(){
@@ -55,7 +57,22 @@ class State  implements Cloneable, Serializable
 		return b.hashCode();
 	}
 
-	
+	public ArrayList<State> getSuccessor() {
+		return successor;
+	}
+
+	public void setSuccessor(ArrayList<State> successor) {
+		this.successor = successor;
+	}
+
+	public int getParent() {
+		return parent;
+	}
+
+	public void setParent(int parent) {
+		this.parent = parent;
+	}
+
 	// Prototype Pattern Here.
 	public Object clone() throws CloneNotSupportedException {
         State new_state = new State(this.numberOfRows, this.numberOfColumns );
@@ -65,9 +82,37 @@ class State  implements Cloneable, Serializable
 		return new_state;
 	}
 
-	
-	/* returns a list of actions that can be taken from the current state
-	actions are integers representing the column where a coin can be dropped */
+
+	public ArrayList<State> generateChildren(){
+		ArrayList<State> children = new ArrayList<State>();
+		if(turn == Board.Turn.PLAYER_1){
+			ArrayList<Integer> possibleMoves = getLegalActions();
+			for(int i =0 ; i<possibleMoves.size() ; i++){
+				State newState = this.deepClone();
+				newState.turn = Board.Turn.PLAYER_2;
+				int row = newState.lastAvailableRow(possibleMoves.get(i));
+				newState.occupyCell(row,possibleMoves.get(i));
+				newState.setParent(possibleMoves.get(i));
+				children.add(newState);
+			}
+		}
+
+		else if(turn == Board.Turn.PLAYER_2){
+			ArrayList<Integer> possibleMoves = getLegalActions();
+			for(int i =0 ; i<possibleMoves.size() ; i++){
+				State newState = this.deepClone();
+				newState.turn = Board.Turn.PLAYER_1;
+				int row = newState.lastAvailableRow(possibleMoves.get(i));
+				newState.occupyCell(row,possibleMoves.get(i));
+				newState.setParent(possibleMoves.get(i));
+				children.add(newState);
+			}
+		}
+		successor=children;
+		return children;
+	}
+
+
 	public ArrayList<Integer> getLegalActions(){
 		ArrayList<Integer> actions = new ArrayList<Integer>();
 		for(int j=0; j < this.numberOfColumns; j++) {
@@ -80,30 +125,7 @@ class State  implements Cloneable, Serializable
 		return actions;
 	}
 
-	public int drop(int col)
-	{
-		//Check if game has ended.
-		if (checkForWin())
-		{
-			return -1;
-		}
-		//Check col
-		int row = 5;
-		for ( ; row>=0 && board[row][col].empty; row--)
-		{}
-		// If the row is -1, then the col is already full.
-		if (row==-1)
-		{
-			return -1;
-		}
-		// Fill the row of the given col with player's checker.
-		else
-		{
-			board[row][col].setPlayer(turn);
-			return row;
-		}
 
-	}
 	/* returns a State object that is obtained by the agent (parameter)
 	performing an action (parameter) on the current state */
 	public State generateSuccessor(Board.Turn agent, int action) throws CloneNotSupportedException{
@@ -299,6 +321,40 @@ class State  implements Cloneable, Serializable
 		}
 		return  boardLogic.checkForWin();
 	}
+
+	public int drop(int col)
+	{
+		//Check if game has ended.
+		if (checkForWin())
+		{
+			return -1;
+		}
+		//Check col
+		int row = 5;
+		for (; row>=0 && !board[col][row].empty; row--)
+		{}
+		// If the row is -1, then the col is already full.
+		if (row==-1)
+		{
+			return -1;
+		}
+		// Fill the row of the given col with player's checker.
+		else
+		{
+			board[col][row].setPlayer(turn);
+
+			return row;
+		}
+
+	}
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
 }
 	
 	
