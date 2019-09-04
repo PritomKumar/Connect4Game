@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-public class AIPlayer {
+public class AIPlayer2 {
     private Board.Turn newplayer;
     private Node currentNode;
     Node head , tail;
@@ -14,7 +14,7 @@ public class AIPlayer {
 
     ArrayList <State> possibleValues ;
 
-    public AIPlayer() {
+    public AIPlayer2() {
 
         createLinkedList();
     }
@@ -43,7 +43,10 @@ public class AIPlayer {
 
         printNode(newState.board);
 
-        int bestMove = miniMaxAB(newState,2,-1000000,10000000,true);
+        int [][] aiBoard = convertToMatrix(newState.board );
+        MyNode aiNode = new MyNode(aiBoard , 2);
+
+        int bestMove = miniMaxAB(aiNode,2,-1000000,10000000,true);
 
         String t =bestMove+ "";
         Log.d("bestMove" , t);
@@ -55,7 +58,26 @@ public class AIPlayer {
         Log.d("action5" , t2);
 
        // printNode(newState.board);
-        return action;
+        return 0;
+    }
+
+    private int[][] convertToMatrix(Cell[][] board) {
+        int [][] newBoard = new int[numberOfRows][numberOfColumns];
+
+        for(int row = 0 ; row < numberOfRows ; row++){
+            for (int col = 0 ; col < numberOfColumns ; col++){
+                if(board[row][col].player == Board.Turn.PLAYER_1){
+                    newBoard[row][col] =1;
+                }
+                else if(board[row][col].player == Board.Turn.PLAYER_2){
+                    newBoard[row][col] =2;
+                }
+                else {
+                    newBoard[row][col] = 0;
+                }
+            }
+        }
+        return  newBoard;
     }
 
     public int hardLevel(){
@@ -68,16 +90,16 @@ public class AIPlayer {
         return 0 ;
     }
 
-    public int checkMove(State root , Cell[][] move){
+    public int checkMove(MyNode root , int[][] move){
 
-        State newState = root.deepClone();
+        MyNode newState = root.deepClone();
 
         for(int col =0 ; col <numberOfColumns ; col++ ){
-            State chcekChild = newState.deepClone();
-            int row = lastAvailableRow(col , chcekChild.board);
+            MyNode chcekChild = newState.deepClone();
+            int row = lastAvailableRow(col , chcekChild.game);
             if(row!=-1){
-                occupyCell(Board.Turn.PLAYER_1 , row , col  , chcekChild.board  );
-                if(compareBoard(chcekChild.board , move)){
+                occupyCell(Board.Turn.PLAYER_1 , row , col  , chcekChild.game  );
+                if(compareBoard(chcekChild.game , move)){
                     return col;
                 }
             }
@@ -86,7 +108,7 @@ public class AIPlayer {
 
     }
 
-    private boolean compareBoard(Cell[][] board, Cell[][] move) {
+    private boolean compareBoard(int[][] board, int[][] move) {
 
         for(int row = 0 ; row < numberOfRows ; row++){
             for (int col = 0 ; col < numberOfColumns ; col++){
@@ -98,16 +120,16 @@ public class AIPlayer {
         return true;
     }
 
-    public int lastAvailableRow(int col, Cell [][] cells) {
+    public int lastAvailableRow(int col, int [][] cells) {
         for (int row = numberOfRows - 1; row >= 0; row--) {
-            if (cells[row][col].empty) {
+            if (cells[row][col] == 0 ) {
                 return row;
             }
         }
         return -1;
     }
 
-    public ArrayList<Integer> getLegalActions(Cell [][] tempCell){
+    public ArrayList<Integer> getLegalActions(int [][] tempCell){
         ArrayList<Integer> temp = new ArrayList<Integer>();
 
         for(int col =0 ; col <numberOfColumns ; col++ ){
@@ -119,20 +141,20 @@ public class AIPlayer {
         return temp;
     }
 
-    public Cell[][] occupyCell(Board.Turn player , int row , int col ,  Cell [][] cells) {
+    public int[][] occupyCell(int player , int row , int col ,  int [][] cells) {
 
         String t = "col =  " + col  +" row " + row;
         //Log.d("occupy", t);
 
-        cells[row][col].setPlayer(player);
+        cells[row][col] = player;
         return  cells;
     }
-    public Cell[][] unOccupyCell(Board.Turn player , int row , int col ,  Cell [][] cells) {
+    public int[][] unOccupyCell(int player , int row , int col ,  int [][] cells) {
 
         String t = "col =  " + col  +" row " + row;
         //Log.d("occupy", t);
 
-        cells[row][col].empty = true ;
+        cells[row][col] = 0;
         return  cells;
     }
 
@@ -186,14 +208,23 @@ public class AIPlayer {
 
 
 
-    private int miniMaxAB(State node, int depth, int alpha, int beta, boolean maximizingPlayer) {
-        ArrayList<State> children = new ArrayList<State>();
-        children= node.generateChildren(depth);
+    private int miniMaxAB(MyNode root, int depth, int alpha, int beta, boolean maximizingPlayer) {
+
+        MyNode newNode = root.deepClone();
+        for(int col =0 ; col <numberOfColumns ; col++ ){
+            MyNode chcekChild = newNode.deepClone();
+            int row = lastAvailableRow(col , chcekChild.game);
+            if(row!=-1){
+                occupyCell(move , row , col  , chcekChild.game  );
+                
+            }
+        }
+        return -1;
 
         String t2 = node.getScore() + "";
         Log.d("scorenode", t2);
 /*
-        for(State s: node.getSuccessor()){
+        for(MyNode s: node.getSuccessor()){
             String t3 = s.getParent() + "";
             Log.d("parent", t3);
            // printNode(s.board);
@@ -209,7 +240,7 @@ public class AIPlayer {
         if (maximizingPlayer) {
             int v = -1000000000;
             int col = 0;
-            for (State child : node.getSuccessor()) {
+            for (MyNode child : node.getSuccessor()) {
                 col++;
                 printNode(child.board);
                 v = Math.max(v, miniMaxAB(child, depth - 1, alpha, beta, false));
@@ -230,7 +261,7 @@ public class AIPlayer {
 
         else {
             int v = 1000000000;
-            for (State child : node.getSuccessor()) {
+            for (MyNode child : node.getSuccessor()) {
                 printNode(child.board);
 
                 v = Math.min(v, miniMaxAB(child, depth - 1, alpha, beta, true));
@@ -251,13 +282,13 @@ public class AIPlayer {
 
     }
 
-    private Cell [][] performBestMove(State root, int bestMove) {
-        ArrayList<State> children = root.getSuccessor();
+    private Cell [][] performBestMove(MyNode root, int bestMove) {
+        ArrayList<MyNode> children = root.getSuccessor();
 
         if(children.size() == 1) {
             return children.get(0).board;
         }
-        for (State child : children) {
+        for (MyNode child : children) {
             if (child.getScore() == bestMove) {
                 return child.board;
             }

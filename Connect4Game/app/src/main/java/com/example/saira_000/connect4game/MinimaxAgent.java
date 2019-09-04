@@ -70,7 +70,7 @@ class MinimaxAgent {
 		int bestPath =0;
 
 		if(d == maxDepth) {
-			return st.evaluationFunction(st);
+			return st.evaluationFunction();
 		}
 		else
 		{
@@ -122,7 +122,7 @@ class MinimaxAgent {
 		int bestPath =0;
 
 		if(d == maxDepth) {
-			return st.evaluationFunction(st);
+			return st.evaluationFunction();
 		}
 		else
 		{

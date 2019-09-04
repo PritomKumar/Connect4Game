@@ -19,7 +19,7 @@ class State  implements Cloneable, Serializable
 	int numberOfRows, numberOfColumns;
 	Cell[][] board;
 	public boolean winCondition;
-	private int score;
+	private int score=0;
 	private int parent;
 	private ArrayList<State> successor;
 
@@ -37,6 +37,7 @@ class State  implements Cloneable, Serializable
 				this.board[i][j] = new Cell();
 			}
 		}
+
 		successor = new ArrayList<State>();
 		parent =-1;
 		reset();
@@ -83,7 +84,7 @@ class State  implements Cloneable, Serializable
 	}
 
 
-	public ArrayList<State> generateChildren(){
+	public ArrayList<State> generateChildren(int depth){
 		ArrayList<State> children = new ArrayList<State>();
 		if(turn == Board.Turn.PLAYER_1){
 			ArrayList<Integer> possibleMoves = getLegalActions();
@@ -92,7 +93,8 @@ class State  implements Cloneable, Serializable
 				newState.turn = Board.Turn.PLAYER_2;
 				int row = newState.lastAvailableRow(possibleMoves.get(i));
 				newState.occupyCell(row,possibleMoves.get(i));
-				newState.setParent(possibleMoves.get(i));
+				if(depth == 3)
+					newState.setParent(possibleMoves.get(i));
 				children.add(newState);
 			}
 		}
@@ -104,11 +106,12 @@ class State  implements Cloneable, Serializable
 				newState.turn = Board.Turn.PLAYER_1;
 				int row = newState.lastAvailableRow(possibleMoves.get(i));
 				newState.occupyCell(row,possibleMoves.get(i));
-				newState.setParent(possibleMoves.get(i));
+				if(depth == 3)
+					newState.setParent(possibleMoves.get(i));
 				children.add(newState);
 			}
 		}
-		successor=children;
+        successor=children;
 		return children;
 	}
 
@@ -245,16 +248,26 @@ class State  implements Cloneable, Serializable
 	}
 
 
-	/* returns the value of each state for minimax to min/max over at
-	zero depth. Right now it's pretty trivial, looking for only goal states.
-	(This would be perfect for infinite depth minimax. Not so great for d=2) */
-	public int evaluationFunction(State st) {
+	public int evaluationFunction() {
 
-		BoardLogic logic = new BoardLogic(turn , st.board , numberOfRows , numberOfColumns);
-		int value = (int)logic.evalulationFunction();
+		BoardLogic logic = new BoardLogic(turn , board , numberOfRows , numberOfColumns);
+		//int value = 0;
 
-		if(st.turn == Board.Turn.PLAYER_2) {
-			if (this.isGoal(st.turn )) {
+        int value = (int)logic.evalulationFunction();
+/*
+        if(isGoal(Board.Turn.PLAYER_2)){
+            return -1000000;
+        }
+        else  if(isGoal(Board.Turn.PLAYER_1)){
+            return 1000000;
+        }
+        else {
+            return  0 ;
+        }
+*/
+
+		if(turn == Board.Turn.PLAYER_1) {
+			if (this.isGoal(Board.Turn.PLAYER_1 )) {
 				return 1000000;
 
 			}
@@ -266,7 +279,7 @@ class State  implements Cloneable, Serializable
 		}
 
 		else {
-			if (this.isGoal( Board.Turn.PLAYER_1 )) {
+			if (this.isGoal( Board.Turn.PLAYER_2 )) {
 				return -1000000;
 
 			}
@@ -277,6 +290,9 @@ class State  implements Cloneable, Serializable
 				return value;
 			}
 		}
+
+
+
 	}
 
 	public void reset() {
