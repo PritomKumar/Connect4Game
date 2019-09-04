@@ -407,7 +407,8 @@ public class BoardLogic3 {
                 winCount = -100000;
                 return winCount;
             } else {
-                winCount = twoConnectCount(2) + threeConnectCount(2);
+                winCount = 10*(twoConnectCount(2) - twoConnectCount(1))
+                        + 50* (threeConnectCount(2) - threeConnectCount(1)) ;
                 winCount = -winCount;
                 String t = winCount + "";
                 Log.d("winCount", t);
@@ -419,7 +420,8 @@ public class BoardLogic3 {
                 winCount = 100000;
                 return winCount;
             } else {
-                winCount = twoConnectCount() + threeConnectCount();
+                winCount = 10*(twoConnectCount(1) - twoConnectCount(2))
+                        + 50* (threeConnectCount(1) - threeConnectCount(2));
 
                 winCount = winCount;
 

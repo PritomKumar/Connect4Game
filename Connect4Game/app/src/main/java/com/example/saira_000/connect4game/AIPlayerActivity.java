@@ -129,8 +129,14 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
     }
 
     private void dropDisc(int col) throws CloneNotSupportedException {
-        if (state.winCondition)
+        if (state.winCondition) {
             return;
+        }
+
+        if(checkDraw()){
+            return;
+        }
+
         int row = state.lastAvailableRow(col);
         if (row == -1) {
             return;
@@ -154,7 +160,13 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
 
         if (state.checkForWin()) {
             win();
-        } else {
+        }
+        else if (checkDraw()){
+            viewHolder.winnerText.setText("DRAW !!!");
+            viewHolder.winnerText.setTextColor(Color.parseColor("#d500f9"));
+            viewHolder.winnerText.setVisibility(View.VISIBLE);
+        }
+        else {
 
             toggleTurn();
         }
@@ -184,6 +196,16 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         viewHolder.winnerText.setVisibility(View.VISIBLE);
     }
 
+    private boolean checkDraw(){
+        for (int i=0 ; i<numberOfRows ; i++){
+            for(int j=0 ; j < numberOfColumns ; j++){
+                if(state.board[i][j].empty){
+                    return false;
+                }
+            }
+        }
+        return  true;
+    }
 
     private void aiTurn() throws CloneNotSupportedException {
 
@@ -214,7 +236,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
                 playerTurn = aiPlayer.hardLevel(state, level);
             }
 
-            else if(level == 5 ) {
+            else if(level == 4 ) {
                 playerTurn = aiPlayer.veryHardLevel(state, level);
             }
 
@@ -224,7 +246,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
             int col = aiColTest(playerTurn);
             //dropDisc(col);
             String temp = col + "";
-            Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
+            //Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
             if (col != -1){
                 dropDisc(col);
 
