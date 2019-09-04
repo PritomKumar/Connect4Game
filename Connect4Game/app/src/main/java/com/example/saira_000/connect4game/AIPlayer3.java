@@ -72,7 +72,7 @@ public class AIPlayer3 {
     public int mediumLevel(State state  , int level ) throws CloneNotSupportedException {
 
         possibleValues = new ArrayList<MyNode>();
-        this.mainDepth = level;
+        this.mainDepth = 3;
         State newState = new State(numberOfRows , numberOfColumns);
         newState = state.deepClone();
         int col = 0;
@@ -86,11 +86,11 @@ public class AIPlayer3 {
 
         printNode(aiNode.game);
 
-        //int bestScore = miniMax(aiNode,mainDepth,true);
+        int bestScore = miniMax(aiNode,mainDepth,true);
 
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
 
-        int bestScore = miniMaxAB(aiNode,mainDepth,-10000000 , 100000000, true);
+        //int bestScore = miniMaxAB(aiNode,mainDepth,-10000000 , 100000000, true);
 
         String t =bestScore+ "";
         Log.d("bestScore" , t);
@@ -100,8 +100,11 @@ public class AIPlayer3 {
         String t2 =action+ "";
         Log.d("action5" , t2);
 
-        long endTime = System.currentTimeMillis();
+        long endTime = System.nanoTime();
         long timeElapsed = endTime - startTime;
+
+        String s ="Time in Milliseconds : " + (int)timeElapsed + "" ;
+        Log.d("Timein" , s);
 
        // printNode(newState.board);
         return action;
@@ -127,7 +130,7 @@ public class AIPlayer3 {
 
         //int bestScore = miniMax(aiNode,mainDepth,true);
 
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
 
         int bestScore = miniMaxAB(aiNode,mainDepth,-10000000 , 100000000, true);
 
@@ -139,8 +142,11 @@ public class AIPlayer3 {
         String t2 =action+ "";
         Log.d("action5" , t2);
 
-        long endTime = System.currentTimeMillis();
+        long endTime = System.nanoTime();
         long timeElapsed = endTime - startTime;
+
+        String s ="Time in Milliseconds : " + (int)timeElapsed + "" ;
+        Log.d("Timein" , s);
 
         // printNode(newState.board);
         return action;

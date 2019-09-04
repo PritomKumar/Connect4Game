@@ -218,7 +218,9 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
                 playerTurn = aiPlayer.veryHardLevel(state, level);
             }
 
-
+            else {
+                playerTurn = -1 ;
+            }
             int col = aiColTest(playerTurn);
             //dropDisc(col);
             String temp = col + "";

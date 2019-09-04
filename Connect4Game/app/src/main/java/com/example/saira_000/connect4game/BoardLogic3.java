@@ -36,8 +36,8 @@ public class BoardLogic3 {
         for(int i=0 ; i<numberOfRows ; i++){
             for (int j=0 ; j<=numberOfColumns-4 ; j++){
 
-                    if(cells[i][j]== opponant && cells[i][j+1]== opponant
-                            && cells[i][j+2]== opponant && cells[i][j+3]== opponant){
+                    if(cells[i][j]== player && cells[i][j+1]== player
+                            && cells[i][j+2]== player && cells[i][j+3]== player){
                         return  true;
                     }
 
@@ -52,8 +52,8 @@ public class BoardLogic3 {
 
                     String t = i+3 +"";
                     Log.d("verti", t);
-                    if(cells[i][j]== opponant && cells[i+1][j] == opponant
-                            && cells[i+2][j]== opponant && cells[i+3][j]== opponant){
+                    if(cells[i][j]== player && cells[i+1][j] == player
+                            && cells[i+2][j]== player && cells[i+3][j]== player){
                         return  true;
                     }
 
@@ -67,8 +67,8 @@ public class BoardLogic3 {
 
                     String t = i+3 +"";
                     Log.d("asi", t);
-                    if(cells[i][j]== opponant && cells[i+1][j+1]== opponant
-                            && cells[i+2][j+2]== opponant && cells[i+3][j+3]== opponant){
+                    if(cells[i][j]== player && cells[i+1][j+1]== player
+                            && cells[i+2][j+2]== player && cells[i+3][j+3]== player){
                         return  true;
                     }
                 }
@@ -84,8 +84,8 @@ public class BoardLogic3 {
 
                     String t = i+3 +"";
                     Log.d("dsi", t);
-                    if(cells[i][j]== opponant && cells[i-1][j+1]== opponant
-                            && cells[i-2][j+2]== opponant && cells[i-3][j+3]== opponant){
+                    if(cells[i][j]== player && cells[i-1][j+1]== player
+                            && cells[i-2][j+2]== player && cells[i-3][j+3]== player){
                         return  true;
                     }
 
@@ -162,18 +162,36 @@ public class BoardLogic3 {
         return  false;
     }
 */
+
+    private  int twoConnectHorizontal(){
+
+        int twoConnectHorizontal=0;
+
+        for(int i=0 ; i<numberOfRows ; i++){
+            for (int j=0 ; j<=numberOfColumns-2 ; j++){
+
+                if(cells[i][j] == player && cells[i][j+1] == player){
+                    twoConnectHorizontal++;
+                }
+            }
+        }
+        String t = twoConnectHorizontal +"";
+        Log.d("twohori", t);
+        return  twoConnectHorizontal;
+        
+    }
+
     public int horizontalCheckCount() {
 
         int horizontalCount = 0;
         for(int i=0 ; i<numberOfRows ; i++){
-            for (int j=0 ; j<numberOfColumns-3 ; j++){
-                int player2 = cells[i][j];
-                if(player2 == 0){
-                    if(cells[i][j] == 0 && cells[i][j+1] == 0
-                            && cells[i][j+2] == 0 && cells[i][j+3] == 0){
-                        horizontalCount++;
-                    }
+            for (int j=0 ; j<=numberOfColumns-4 ; j++){
+
+                if(cells[i][j] == 0 && cells[i][j+1] == 0
+                        && cells[i][j+2] == 0 && cells[i][j+3] == 0){
+                    horizontalCount++;
                 }
+
             }
         }
         String t = horizontalCount +"";
@@ -183,15 +201,14 @@ public class BoardLogic3 {
 
     public int verticalCheckCount() {
         int verticalCount =0 ;
-        for(int i=0 ; i<numberOfRows-3 ; i++){
+        for(int i=0 ; i<=numberOfRows-4 ; i++){
             for (int j=0 ; j<numberOfColumns ; j++){
-                int player2 = cells[i][j];
-                if(player2 == 0){
-                    if(cells[i][j] == 0 && cells[i+1][j] == 0
-                            && cells[i+2][j] == 0 && cells[i+3][j] == 0){
-                        verticalCount++;
-                    }
+
+                if(cells[i][j] == 0 && cells[i+1][j] == 0
+                        && cells[i+2][j] == 0 && cells[i+3][j] == 0){
+                    verticalCount++;
                 }
+
             }
         }
         String t = verticalCount +"";
