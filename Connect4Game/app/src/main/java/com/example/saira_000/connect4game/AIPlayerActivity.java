@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
     private Board board;
     private  State state;
     private BoardLogic boardLogic;
-    private AIPlayer aiPlayer;
+    private AIPlayer3 aiPlayer;
     private AIPlayerActivity.ViewHolder viewHolder;
     private static int numberOfRows = 6;
     private static int numberOfColumns = 7;
@@ -46,7 +45,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         buildCells();
         playerTouch();
 
-        aiPlayer = new AIPlayer();
+        aiPlayer = new AIPlayer3();
         viewHolder = new AIPlayerActivity.ViewHolder();
         viewHolder.player1Win = (TextView) findViewById(R.id.player1Win);
         viewHolder.player2Win = (TextView) findViewById(R.id.player2Win);

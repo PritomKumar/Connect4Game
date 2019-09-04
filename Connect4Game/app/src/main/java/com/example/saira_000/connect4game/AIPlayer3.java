@@ -4,17 +4,18 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-public class AIPlayer2 {
+public class AIPlayer3 {
     private Board.Turn newplayer;
     private Node currentNode;
     Node head , tail;
     private int numberOfColumns=7;
     private int numberOfRows=6;
+    private  int mainDepth = 3;
     private  int path ;
 
-    ArrayList <State> possibleValues ;
+    ArrayList <MyNode> possibleValues ;
 
-    public AIPlayer2() {
+    public AIPlayer3() {
 
         createLinkedList();
     }
@@ -36,29 +37,30 @@ public class AIPlayer2 {
 
     public int mediumLevel(State state ) throws CloneNotSupportedException {
 
-        possibleValues = new ArrayList<State>();
+        possibleValues = new ArrayList<MyNode>();
         State newState = new State(numberOfRows , numberOfColumns);
         newState = state.deepClone();
         int col = 0;
 
-        printNode(newState.board);
+        printNode2(newState.board);
 
         int [][] aiBoard = convertToMatrix(newState.board );
         MyNode aiNode = new MyNode(aiBoard , 2);
 
-        int bestMove = miniMaxAB(aiNode,2,-1000000,10000000,true);
+        printNode(aiNode.game);
 
-        String t =bestMove+ "";
-        Log.d("bestMove" , t);
-        Cell [][] checkMove = performBestMove(newState , bestMove);
+        int bestScore = miniMax(aiNode,mainDepth,true);
 
+        String t =bestScore+ "";
+        Log.d("bestScore" , t);
 
-        int action = checkMove(newState , checkMove);
+        int action = findMove(bestScore);
+
         String t2 =action+ "";
         Log.d("action5" , t2);
 
        // printNode(newState.board);
-        return 0;
+        return action;
     }
 
     private int[][] convertToMatrix(Cell[][] board) {
@@ -98,7 +100,7 @@ public class AIPlayer2 {
             MyNode chcekChild = newState.deepClone();
             int row = lastAvailableRow(col , chcekChild.game);
             if(row!=-1){
-                occupyCell(Board.Turn.PLAYER_1 , row , col  , chcekChild.game  );
+                occupyCell( root.player , row , col  , chcekChild.game  );
                 if(compareBoard(chcekChild.game , move)){
                     return col;
                 }
@@ -149,6 +151,7 @@ public class AIPlayer2 {
         cells[row][col] = player;
         return  cells;
     }
+
     public int[][] unOccupyCell(int player , int row , int col ,  int [][] cells) {
 
         String t = "col =  " + col  +" row " + row;
@@ -181,23 +184,23 @@ public class AIPlayer2 {
         else return value;
     }
 
-    public  void printNode(Cell[][] cells){
+    public  void printNode2(Cell [][] cells){
 
         String test = "" ;
         for (int row = 0; row < numberOfRows; row++) {
             test = test + "\n";
             for (int col = 0; col < numberOfColumns; col++) {
-                if(cells[row][col].empty){
+                if(cells[row][col].empty  ){
                     test = test + " 0 " ;
                 }
                 else if(cells[row][col].player == Board.Turn.PLAYER_1){
-                    test = test + " p1 " ;
+                    test = test + " 1 " ;
                 }
                 else if(cells[row][col].player == Board.Turn.PLAYER_2){
-                    test = test + " p2 " ;
+                    test = test + " 2 " ;
                 }
                 else{
-                    test = test + " 1 ";
+                    test = test + " @ ";
                 }
             }
 
@@ -207,21 +210,59 @@ public class AIPlayer2 {
     }
 
 
+    public  void printNode(int [][] cells){
 
-    private int miniMaxAB(MyNode root, int depth, int alpha, int beta, boolean maximizingPlayer) {
+        String test = "" ;
+        for (int row = 0; row < numberOfRows; row++) {
+            test = test + "\n";
+            for (int col = 0; col < numberOfColumns; col++) {
+                if(cells[row][col] == 0 ){
+                    test = test + " 0 " ;
+                }
+                else if(cells[row][col] == 1){
+                    test = test + " 1 " ;
+                }
+                else if(cells[row][col] == 2){
+                    test = test + " 2 " ;
+                }
+                else{
+                    test = test + " @ ";
+                }
+            }
 
-        MyNode newNode = root.deepClone();
+        }
+
+        Log.d("node", test);
+    }
+
+    private int tooglePlayer(int player){
+        if(player == 1){
+            return  2;
+        }
+        else return  1;
+    }
+
+    private ArrayList<MyNode> generateChildren(MyNode newNode){
+        ArrayList<MyNode> children = new ArrayList<MyNode>();
         for(int col =0 ; col <numberOfColumns ; col++ ){
             MyNode chcekChild = newNode.deepClone();
             int row = lastAvailableRow(col , chcekChild.game);
             if(row!=-1){
-                occupyCell(move , row , col  , chcekChild.game  );
-                
+                int player = tooglePlayer(newNode.player);
+                occupyCell(player , row , col  , chcekChild.game  );
+                chcekChild.col = col;
+                chcekChild.player = player;
+                children.add(chcekChild);
             }
         }
-        return -1;
+        return  children;
+    }
 
-        String t2 = node.getScore() + "";
+    private int miniMax(MyNode node, int depth, boolean maximizingPlayer) {
+
+        MyNode newNode = node.deepClone();
+
+        String t2 = node.score + "";
         Log.d("scorenode", t2);
 /*
         for(MyNode s: node.getSuccessor()){
@@ -231,26 +272,97 @@ public class AIPlayer2 {
         }
         //return  0;
 */
-
-
-
-        if(depth == 0 || node.checkForWin()){
-            return node.evaluationFunction();
+        int player5 = 0;
+        if(maximizingPlayer){
+            player5 = 2;
+        }
+        else if(!maximizingPlayer){
+            player5 = 1;
+        }
+        BoardLogic3 boardLogic = new BoardLogic3(player5 , newNode.game , numberOfRows,numberOfColumns);
+        if(depth == 0 || boardLogic.checkForWin()){
+            return boardLogic.evalulationFunction(newNode);
         }
         if (maximizingPlayer) {
             int v = -1000000000;
             int col = 0;
-            for (MyNode child : node.getSuccessor()) {
+
+            for (MyNode child : generateChildren(newNode)) {
                 col++;
-                printNode(child.board);
-                v = Math.max(v, miniMaxAB(child, depth - 1, alpha, beta, false));
-                alpha = Math.max(alpha, v);
-                node.setScore(v);
-                if(depth==1){
+                printNode(child.game);
+                v = Math.max(v, miniMax(child, depth - 1, false));
+                node.score = v ;
+                if(depth == mainDepth){
                     possibleValues.add(child);
                 }
-                path= v;
-                String t = child.getScore() + "";
+                String t = child.score + "";
+                Log.d("scoremax", t);
+
+            }
+            return v;
+        }
+
+        else {
+            int v = 1000000000;
+            for (MyNode child : generateChildren(newNode)) {
+                printNode(child.game);
+
+                v = Math.min(v, miniMax(child, depth - 1, true));
+                node.score = v ;
+                if(depth == mainDepth){
+                    possibleValues.add(child);
+                }
+                String t = child.score + "";
+                Log.d("scoremin", t);
+
+            }
+            return v;
+        }
+
+
+    }
+
+
+    private int miniMaxAB(MyNode node, int depth, int alpha, int beta, boolean maximizingPlayer) {
+
+        MyNode newNode = node.deepClone();
+
+
+        String t2 = node.score + "";
+        Log.d("scorenode", t2);
+/*
+        for(MyNode s: node.getSuccessor()){
+            String t3 = s.getParent() + "";
+            Log.d("parent", t3);
+           // printNode(s.board);
+        }
+        //return  0;
+*/
+        int player5 = 0;
+        if(maximizingPlayer){
+            player5 = 2;
+        }
+        else if(!maximizingPlayer){
+            player5 = 1;
+        }
+        BoardLogic3 boardLogic = new BoardLogic3(player5 , newNode.game , numberOfRows,numberOfColumns);
+        if(depth == 0 || boardLogic.checkForWin()){
+            return boardLogic.evalulationFunction(newNode);
+        }
+        if (maximizingPlayer) {
+            int v = -1000000000;
+            int col = 0;
+
+            for (MyNode child : generateChildren(newNode)) {
+                col++;
+                printNode(child.game);
+                v = Math.max(v, miniMaxAB(child, depth - 1, alpha, beta, false));
+                alpha = Math.max(alpha, v);
+                node.score = v ;
+                if(depth == mainDepth){
+                    possibleValues.add(child);
+                }
+                String t = child.score + "";
                 Log.d("scoremax", t);
                 if (beta <= alpha) {
                     break;
@@ -261,16 +373,16 @@ public class AIPlayer2 {
 
         else {
             int v = 1000000000;
-            for (MyNode child : node.getSuccessor()) {
-                printNode(child.board);
+            for (MyNode child : generateChildren(newNode)) {
+                printNode(child.game);
 
                 v = Math.min(v, miniMaxAB(child, depth - 1, alpha, beta, true));
                 beta = Math.min(beta, v);
-                node.setScore(v);
-                if(depth==1){
+                node.score = v ;
+                if(depth == mainDepth){
                     possibleValues.add(child);
                 }
-                String t = child.getScore() + "";
+                String t = child.score + "";
                 Log.d("scoremin", t);
                 if (beta <= alpha) {
                     break;
@@ -282,6 +394,17 @@ public class AIPlayer2 {
 
     }
 
+    private  int findMove(int bestScore){
+
+        for(int i = 0 ; i< possibleValues.size() ; i++){
+            if(possibleValues.get(i).score == bestScore){
+                return possibleValues.get(i).col;
+            }
+        }
+        return -1;
+    }
+
+/*
     private Cell [][] performBestMove(MyNode root, int bestMove) {
         ArrayList<MyNode> children = root.getSuccessor();
 
@@ -294,8 +417,11 @@ public class AIPlayer2 {
             }
         }
         return null;
-    }
-    /*
+
+*/
+
+
+/*
 
     public int Minimax(Node node, int depth, Board.Turn player) {
 
