@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class MyNode implements Serializable {
     int [][] game = new int[6][7];
-    int score =0;
+    int score =0 ;
     int col = 0;
     int player = 0 ;
     //ArrayList<MyNode> children = new ArrayList<MyNode>();

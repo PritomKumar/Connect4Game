@@ -5,7 +5,8 @@ import android.util.Log;
 public class BoardLogic3 {
 
     private int player;
-    private int[][] cells;
+    private int opponant;
+    public int[][] cells;
     private int[][] backUpCells;
     private int numberOfColumns;
     private int numberOfRows;
@@ -17,6 +18,8 @@ public class BoardLogic3 {
         this.backUpCells = cells;
         this.numberOfRows = numberOfRows;
         this.numberOfColumns = numberOfColumns;
+
+        this.opponant = player;
     }
 
     public boolean checkForWin(){
@@ -28,11 +31,75 @@ public class BoardLogic3 {
         }
     }
 
+
+    public boolean horizontalCheck() {
+        for(int i=0 ; i<numberOfRows ; i++){
+            for (int j=0 ; j<=numberOfColumns-4 ; j++){
+
+                    if(cells[i][j]== opponant && cells[i][j+1]== opponant
+                            && cells[i][j+2]== opponant && cells[i][j+3]== opponant){
+                        return  true;
+                    }
+
+            }
+        }
+        return  false;
+    }
+
+    public boolean verticalCheck() {
+        for(int i=0 ; i<=numberOfRows-4 ; i++){
+            for (int j=0 ; j<numberOfColumns ; j++){
+
+                    String t = i+3 +"";
+                    Log.d("verti", t);
+                    if(cells[i][j]== opponant && cells[i+1][j] == opponant
+                            && cells[i+2][j]== opponant && cells[i+3][j]== opponant){
+                        return  true;
+                    }
+
+            }
+        }
+        return  false;
+    }
+    public boolean ascendingDiagonalCheck() {
+        for(int i=0 ; i<=numberOfRows - 4 ; i++){
+            for (int j=0 ; j<=numberOfColumns-4 ; j++){
+
+                    String t = i+3 +"";
+                    Log.d("asi", t);
+                    if(cells[i][j]== opponant && cells[i+1][j+1]== opponant
+                            && cells[i+2][j+2]== opponant && cells[i+3][j+3]== opponant){
+                        return  true;
+                    }
+                }
+
+        }
+        return  false;
+    }
+
+    public boolean descendingDiagonalCheck() {
+
+        for(int i=numberOfRows-1 ; i>=3 ; i--){
+            for (int j=0 ; j<=numberOfColumns-4   ; j++){
+
+                    String t = i+3 +"";
+                    Log.d("dsi", t);
+                    if(cells[i][j]== opponant && cells[i-1][j+1]== opponant
+                            && cells[i-2][j+2]== opponant && cells[i-3][j+3]== opponant){
+                        return  true;
+                    }
+
+            }
+        }
+        return  false;
+    }
+    
+/*
     public boolean horizontalCheck() {
         for(int i=0 ; i<numberOfRows ; i++){
             for (int j=0 ; j<numberOfColumns-3 ; j++){
                 int player2 = cells[i][j];
-                if(player2 == player){
+                if(player2 == opponant){
                     if(cells[i][j]== player && cells[i][j+1]== player
                             && cells[i][j+2]== player && cells[i][j+3]== player){
                             return  true;
@@ -94,7 +161,7 @@ public class BoardLogic3 {
         }
         return  false;
     }
-
+*/
     public int horizontalCheckCount() {
 
         int horizontalCount = 0;
@@ -134,14 +201,13 @@ public class BoardLogic3 {
 
     public int ascendingDiagonalCheckCount() {
         int ascendingDiagonalCount=0;
-        for(int i=3 ; i<numberOfRows ; i++){
-            for (int j=0 ; j<numberOfColumns-3 ; j++){
-                int player2 = cells[i][j];
-                if(player2 == 0){
-                    if(cells[i][j] == 0 && cells[i-1][j+1] == 0
-                            && cells[i-2][j+2] == 0 && cells[i-3][j+3] == 0){
-                        ascendingDiagonalCount++;
-                    }
+        for(int i=0 ; i<=numberOfRows - 4 ; i++){
+            for (int j=0 ; j<=numberOfColumns-4 ; j++){
+                String t = i+3 +"";
+                Log.d("asi", t);
+                if(cells[i][j]== 0 && cells[i+1][j+1]== 0
+                        && cells[i+2][j+2]== 0 && cells[i+3][j+3]== 0){
+                    ascendingDiagonalCount++;
                 }
             }
         }
@@ -153,14 +219,14 @@ public class BoardLogic3 {
 
     public int descendingDiagonalCheckCount() {
         int descendingDiagonalCount = 0;
-        for(int i=3 ; i<numberOfRows ; i++){
-            for (int j=3 ; j<numberOfColumns ; j++){
+        for(int i=numberOfRows-1 ; i>=3 ; i--){
+            for (int j=0 ; j<=numberOfColumns-4   ; j++){
                 int player2 = cells[i][j];
                 if(player2 ==0){
                     String t = i+3 +"";
                     Log.d("dsi", t);
-                    if(cells[i][j] == 0 && cells[i-1][j-1] == 0
-                            && cells[i-2][j-2] == 0 && cells[i-3][j-3] == 0){
+                    if(cells[i][j]== 0 && cells[i-1][j+1]== 0
+                            && cells[i-2][j+2]== 0 && cells[i-3][j+3]== 0){
                         descendingDiagonalCount++;
                     }
                 }
@@ -178,35 +244,35 @@ public class BoardLogic3 {
 
         winCount = 0;
 
-        if(node.player ==2) {
+        if(node.player == 2) {
             if (checkForWin()) {
-                winCount = 1000000;
+                winCount = -100000;
                 return winCount;
             } else {
                 winCount = horizontalCheckCount() + verticalCheckCount()
                         + ascendingDiagonalCheckCount() + descendingDiagonalCheckCount();
-
-                String t = winCount + "";
-                Log.d("winCount", t);
-                return 0;
-            }
-        }
-        else if(node.player ==1) {
-            if (checkForWin()) {
-                winCount = -1000000;
-                return winCount;
-            } else {
-                winCount = horizontalCheckCount() + verticalCheckCount()
-                        + ascendingDiagonalCheckCount() + descendingDiagonalCheckCount();
-
                 winCount = -winCount;
+                String t = winCount + "";
+                Log.d("winCount", t);
+                return winCount;
+            }
+        }
+        else if(node.player == 1) {
+            if (checkForWin()) {
+                winCount = 100000;
+                return winCount;
+            } else {
+                winCount = horizontalCheckCount() + verticalCheckCount()
+                        + ascendingDiagonalCheckCount() + descendingDiagonalCheckCount();
+
+                winCount = winCount;
 
                 String t = winCount + "";
                 Log.d("winCount", t);
-                return 0;
+                return winCount;
             }
         }
-        return  0 ;
+        return  winCount;
     }
 
 

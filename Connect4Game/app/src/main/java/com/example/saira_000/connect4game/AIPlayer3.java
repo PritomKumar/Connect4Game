@@ -47,9 +47,13 @@ public class AIPlayer3 {
         int [][] aiBoard = convertToMatrix(newState.board );
         MyNode aiNode = new MyNode(aiBoard , 2);
 
+        aiNode.player=2;
+
         printNode(aiNode.game);
 
-        int bestScore = miniMax(aiNode,mainDepth,true);
+        //int bestScore = miniMax(aiNode,mainDepth,true);
+
+        int bestScore = miniMaxAB(aiNode,mainDepth,-10000000 , 100000000, true);
 
         String t =bestScore+ "";
         Log.d("bestScore" , t);
@@ -260,18 +264,18 @@ public class AIPlayer3 {
 
     private int miniMax(MyNode node, int depth, boolean maximizingPlayer) {
 
-        MyNode newNode = node.deepClone();
-
         String t2 = node.score + "";
         Log.d("scorenode", t2);
 /*
-        for(MyNode s: node.getSuccessor()){
-            String t3 = s.getParent() + "";
+        for(MyNode child : generateChildren(newNode)){
+            String t3 = child.col + "";
             Log.d("parent", t3);
-           // printNode(s.board);
+            printNode(child.game);
         }
-        //return  0;
-*/
+        return  0;
+
+ */
+
         int player5 = 0;
         if(maximizingPlayer){
             player5 = 2;
@@ -279,16 +283,29 @@ public class AIPlayer3 {
         else if(!maximizingPlayer){
             player5 = 1;
         }
-        BoardLogic3 boardLogic = new BoardLogic3(player5 , newNode.game , numberOfRows,numberOfColumns);
+
+        BoardLogic3 boardLogic = new BoardLogic3(node.player , node.game , numberOfRows,numberOfColumns);
+        Log.d("node", "BoardLogic");
+        //printNode(boardLogic.cells);
+
+        if(boardLogic.checkForWin()){
+            Log.d("winners", "Winnner!!!!!!!");
+            int result = boardLogic.evalulationFunction(node);
+            Log.d("winners", result + "" );
+        }
+
         if(depth == 0 || boardLogic.checkForWin()){
-            return boardLogic.evalulationFunction(newNode);
+            int result = boardLogic.evalulationFunction(node);
+            node.score = result;
+            return result;
         }
         if (maximizingPlayer) {
             int v = -1000000000;
-            int col = 0;
 
-            for (MyNode child : generateChildren(newNode)) {
-                col++;
+            for (MyNode child : generateChildren(node)) {
+
+                String s = "Child = " + child.player;
+                Log.d("node" , s);
                 printNode(child.game);
                 v = Math.max(v, miniMax(child, depth - 1, false));
                 node.score = v ;
@@ -304,7 +321,9 @@ public class AIPlayer3 {
 
         else {
             int v = 1000000000;
-            for (MyNode child : generateChildren(newNode)) {
+            for (MyNode child : generateChildren(node)) {
+                String s = "Child = " + child.player;
+                Log.d("node" , s);
                 printNode(child.game);
 
                 v = Math.min(v, miniMax(child, depth - 1, true));
@@ -345,10 +364,16 @@ public class AIPlayer3 {
         else if(!maximizingPlayer){
             player5 = 1;
         }
-        BoardLogic3 boardLogic = new BoardLogic3(player5 , newNode.game , numberOfRows,numberOfColumns);
+        BoardLogic3 boardLogic = new BoardLogic3(node.player , newNode.game , numberOfRows,numberOfColumns);
+
+
+
         if(depth == 0 || boardLogic.checkForWin()){
-            return boardLogic.evalulationFunction(newNode);
+            int result = boardLogic.evalulationFunction(node);
+            node.score = result;
+            return result;
         }
+
         if (maximizingPlayer) {
             int v = -1000000000;
             int col = 0;
@@ -396,8 +421,15 @@ public class AIPlayer3 {
 
     private  int findMove(int bestScore){
 
+        String s = "Possible value size = " + possibleValues.size() + "" ;
+        Log.d("possible" , s);
+
         for(int i = 0 ; i< possibleValues.size() ; i++){
             if(possibleValues.get(i).score == bestScore){
+                String s2 = "Parent  = " + possibleValues.get(i).col + "" ;
+                Log.d("node" , s2);
+                printNode(possibleValues.get(i).game);
+
                 return possibleValues.get(i).col;
             }
         }
@@ -455,4 +487,5 @@ public class AIPlayer3 {
         }
     }
 */
+
 }
