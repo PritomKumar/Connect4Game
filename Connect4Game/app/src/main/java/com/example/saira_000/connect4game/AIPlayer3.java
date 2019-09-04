@@ -10,7 +10,7 @@ public class AIPlayer3 {
     Node head , tail;
     private int numberOfColumns=7;
     private int numberOfRows=6;
-    private  int mainDepth = 3;
+    private  int mainDepth = 1;
     private  int path ;
 
     ArrayList <MyNode> possibleValues ;
@@ -30,13 +30,87 @@ public class AIPlayer3 {
         return  randomInt;
     }
 
-    public int easyLevel(){
+    public int easyLevel(State state , int level ) throws CloneNotSupportedException {
 
-        return 0 ;
+        possibleValues = new ArrayList<MyNode>();
+        this.mainDepth = level;
+        State newState = new State(numberOfRows , numberOfColumns);
+        newState = state.deepClone();
+        int col = 0;
+
+        printNode2(newState.board);
+
+
+        int [][] aiBoard = convertToMatrix(newState.board );
+        MyNode aiNode = new MyNode(aiBoard , 2);
+
+        aiNode.player=2;
+
+        printNode(aiNode.game);
+
+        //int bestScore = miniMax(aiNode,mainDepth,true);
+
+        long startTime = System.currentTimeMillis();
+
+        int bestScore = miniMaxAB(aiNode,mainDepth,-10000000 , 100000000, true);
+
+        String t =bestScore+ "";
+        Log.d("bestScore" , t);
+
+        int action = findMove(bestScore);
+
+        String t2 =action+ "";
+        Log.d("action5" , t2);
+
+        long endTime = System.currentTimeMillis();
+        long timeElapsed = endTime - startTime;
+
+        // printNode(newState.board);
+        return action;
     }
 
-    public int mediumLevel(State state ) throws CloneNotSupportedException {
+    public int mediumLevel(State state  , int level ) throws CloneNotSupportedException {
 
+        possibleValues = new ArrayList<MyNode>();
+        this.mainDepth = level;
+        State newState = new State(numberOfRows , numberOfColumns);
+        newState = state.deepClone();
+        int col = 0;
+
+        printNode2(newState.board);
+
+        int [][] aiBoard = convertToMatrix(newState.board );
+        MyNode aiNode = new MyNode(aiBoard , 2);
+
+        aiNode.player=2;
+
+        printNode(aiNode.game);
+
+        //int bestScore = miniMax(aiNode,mainDepth,true);
+
+        long startTime = System.currentTimeMillis();
+
+        int bestScore = miniMaxAB(aiNode,mainDepth,-10000000 , 100000000, true);
+
+        String t =bestScore+ "";
+        Log.d("bestScore" , t);
+
+        int action = findMove(bestScore);
+
+        String t2 =action+ "";
+        Log.d("action5" , t2);
+
+        long endTime = System.currentTimeMillis();
+        long timeElapsed = endTime - startTime;
+
+       // printNode(newState.board);
+        return action;
+    }
+
+
+    public int hardLevel(State state, int level ) throws CloneNotSupportedException {
+
+        this.mainDepth = level;
         possibleValues = new ArrayList<MyNode>();
         State newState = new State(numberOfRows , numberOfColumns);
         newState = state.deepClone();
@@ -53,6 +127,8 @@ public class AIPlayer3 {
 
         //int bestScore = miniMax(aiNode,mainDepth,true);
 
+        long startTime = System.currentTimeMillis();
+
         int bestScore = miniMaxAB(aiNode,mainDepth,-10000000 , 100000000, true);
 
         String t =bestScore+ "";
@@ -63,7 +139,48 @@ public class AIPlayer3 {
         String t2 =action+ "";
         Log.d("action5" , t2);
 
-       // printNode(newState.board);
+        long endTime = System.currentTimeMillis();
+        long timeElapsed = endTime - startTime;
+
+        // printNode(newState.board);
+        return action;
+    }
+
+    public int veryHardLevel(State state, int level ) throws CloneNotSupportedException {
+
+        this.mainDepth = level;
+        possibleValues = new ArrayList<MyNode>();
+        State newState = new State(numberOfRows , numberOfColumns);
+        newState = state.deepClone();
+        int col = 0;
+
+        printNode2(newState.board);
+
+        int [][] aiBoard = convertToMatrix(newState.board );
+        MyNode aiNode = new MyNode(aiBoard , 2);
+
+        aiNode.player=2;
+
+        printNode(aiNode.game);
+
+        //int bestScore = miniMax(aiNode,mainDepth,true);
+
+        long startTime = System.currentTimeMillis();
+
+        int bestScore = miniMaxAB(aiNode,mainDepth,-10000000 , 100000000, true);
+
+        String t =bestScore+ "";
+        Log.d("bestScore" , t);
+
+        int action = findMove(bestScore);
+
+        String t2 =action+ "";
+        Log.d("action5" , t2);
+
+        long endTime = System.currentTimeMillis();
+        long timeElapsed = endTime - startTime;
+
+        // printNode(newState.board);
         return action;
     }
 
@@ -86,15 +203,6 @@ public class AIPlayer3 {
         return  newBoard;
     }
 
-    public int hardLevel(){
-
-        return 0 ;
-    }
-
-    public int veryHardLevel(){
-
-        return 0 ;
-    }
 
     public int checkMove(MyNode root , int[][] move){
 

@@ -3,6 +3,7 @@ package com.example.saira_000.connect4game;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -27,6 +28,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
     private AIPlayerActivity.ViewHolder viewHolder;
     private static int numberOfRows = 6;
     private static int numberOfColumns = 7;
+    private int level ;
 
     private class ViewHolder {
         public TextView player1Win;
@@ -44,6 +46,9 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
         boardView = findViewById(R.id.game_board);
         buildCells();
         playerTouch();
+
+        Intent intent = getIntent();
+        this.level = intent.getIntExtra("level" , 0 );
 
         aiPlayer = new AIPlayer3();
         viewHolder = new AIPlayerActivity.ViewHolder();
@@ -191,9 +196,30 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
 
            // copyBoard(newState.board , state.board);
 
-            int randomInt = aiPlayer.mediumLevel(state);
+            int playerTurn = 0;
 
-            int col = aiColTest(randomInt);
+            if(level == 0){
+                playerTurn = aiPlayer.babyLevel();
+            }
+
+            else if(level == 1 ) {
+                playerTurn = aiPlayer.easyLevel(state, level);
+            }
+
+            else if(level == 2 ) {
+                playerTurn = aiPlayer.mediumLevel(state, level);
+            }
+
+            else if(level == 3 ) {
+                playerTurn = aiPlayer.hardLevel(state, level);
+            }
+
+            else if(level == 4 ) {
+                playerTurn = aiPlayer.veryHardLevel(state, level);
+            }
+
+
+            int col = aiColTest(playerTurn);
             //dropDisc(col);
             String temp = col + "";
             Toast.makeText(AIPlayerActivity.this , temp , Toast.LENGTH_SHORT).show();
