@@ -71,7 +71,7 @@ public class AIPlayerLevel extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AIPlayerLevel.this , AIPlayerActivity.class);
-                intent.putExtra("level" , 4);
+                intent.putExtra("level" , 5);
                 startActivity(intent);
             }
         });

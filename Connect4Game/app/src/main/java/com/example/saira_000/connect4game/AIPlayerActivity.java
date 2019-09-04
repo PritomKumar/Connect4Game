@@ -214,7 +214,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
                 playerTurn = aiPlayer.hardLevel(state, level);
             }
 
-            else if(level == 4 ) {
+            else if(level == 5 ) {
                 playerTurn = aiPlayer.veryHardLevel(state, level);
             }
 

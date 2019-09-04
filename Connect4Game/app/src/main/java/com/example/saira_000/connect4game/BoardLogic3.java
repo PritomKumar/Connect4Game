@@ -163,7 +163,7 @@ public class BoardLogic3 {
     }
 */
 
-    private  int twoConnectHorizontal(){
+    private  int twoConnectHorizontal(int player){
 
         int twoConnectHorizontal=0;
 
@@ -179,6 +179,147 @@ public class BoardLogic3 {
         Log.d("twohori", t);
         return  twoConnectHorizontal;
         
+    }
+
+    private  int twoConnectVertical(int player){
+
+        int twoConnectVertical=0;
+
+        for(int i=0 ; i<=numberOfRows-2 ; i++){
+            for (int j=0 ; j<numberOfColumns ; j++){
+
+
+                if(cells[i][j] == player && cells[i+1][j] == player){
+                    twoConnectVertical++;
+                }
+            }
+        }
+        String t = twoConnectVertical +"";
+        Log.d("twoverti", t);
+        return  twoConnectVertical;
+
+    }
+
+    private  int twoConnectAsending(int player){
+
+        int twoConnectAsending=0;
+
+        for(int i=0 ; i<=numberOfRows - 2 ; i++){
+            for (int j=0 ; j<=numberOfColumns-2 ; j++){
+
+                if(cells[i][j] == player && cells[i+1][j+1] == player){
+                    twoConnectAsending++;
+                }
+            }
+        }
+        String t = twoConnectAsending +"";
+        Log.d("twoase", t);
+        return  twoConnectAsending;
+
+    }
+
+    private  int twoConnectDesending(int player){
+
+        int twoConnectDesending=0;
+
+        for(int i=numberOfRows-1 ; i>=1 ; i--){
+            for (int j=0 ; j<=numberOfColumns-2   ; j++){
+
+                if(cells[i][j] == player && cells[i-1][j+1] == player){
+                    twoConnectDesending++;
+                }
+            }
+        }
+        String t = twoConnectDesending +"";
+        Log.d("twodes", t);
+        return  twoConnectDesending;
+
+    }
+    
+    private  int twoConnectCount(int player){
+        int count = twoConnectVertical( player)*10 + twoConnectHorizontal(player)*10
+                + twoConnectAsending(player)*15 + twoConnectDesending(player)*15;
+        return count;
+    }
+
+
+    private  int threeConnectHorizontal(int player){
+
+        int threeConnectHorizontal=0;
+
+        for(int i=0 ; i<numberOfRows ; i++){
+            for (int j=0 ; j<=numberOfColumns-3 ; j++){
+
+                if(cells[i][j] == player && cells[i][j+1] == player && cells[i][j+2] == player){
+                    threeConnectHorizontal++;
+                }
+            }
+        }
+        String t = threeConnectHorizontal +"";
+        Log.d("threehori", t);
+        return  threeConnectHorizontal;
+
+    }
+
+    private  int threeConnectVertical(int player){
+
+        int threeConnectVertical=0;
+
+        for(int i=0 ; i<=numberOfRows-3 ; i++){
+            for (int j=0 ; j<numberOfColumns ; j++){
+
+
+                if(cells[i][j] == player && cells[i+1][j] == player && cells[i+2][j] == player){
+                    threeConnectVertical++;
+                }
+            }
+        }
+        String t = threeConnectVertical +"";
+        Log.d("threeverti", t);
+        return  threeConnectVertical;
+
+    }
+
+    private  int threeConnectAsending(int player){
+
+        int threeConnectAsending=0;
+
+        for(int i=0 ; i<=numberOfRows - 3 ; i++){
+            for (int j=0 ; j<=numberOfColumns-3 ; j++){
+
+                if(cells[i][j] == player && cells[i+1][j+1] == player && cells[i+2][j+2] == player){
+                    threeConnectAsending++;
+                }
+            }
+        }
+        String t = threeConnectAsending +"";
+        Log.d("threease", t);
+        return  threeConnectAsending;
+
+    }
+
+    private  int threeConnectDesending(int player){
+
+        int threeConnectDesending=0;
+
+        for(int i=numberOfRows-1 ; i>=2 ; i--){
+            for (int j=0 ; j<=numberOfColumns-3   ; j++){
+
+                if(cells[i][j] == player && cells[i-1][j+1] == player  && cells[i-2][j+2] == player){
+                    threeConnectDesending++;
+                }
+            }
+        }
+        String t = threeConnectDesending +"";
+        Log.d("threedes", t);
+        return  threeConnectDesending;
+
+    }
+
+    private  int threeConnectCount(int player){
+        int count = threeConnectVertical(player)*100 + threeConnectHorizontal(player)*100
+                + threeConnectAsending(player)*150 + threeConnectDesending(player)*150;
+        return count;
     }
 
     public int horizontalCheckCount() {
@@ -266,8 +407,7 @@ public class BoardLogic3 {
                 winCount = -100000;
                 return winCount;
             } else {
-                winCount = horizontalCheckCount() + verticalCheckCount()
-                        + ascendingDiagonalCheckCount() + descendingDiagonalCheckCount();
+                winCount = twoConnectCount(2) + threeConnectCount(2);
                 winCount = -winCount;
                 String t = winCount + "";
                 Log.d("winCount", t);
@@ -279,8 +419,7 @@ public class BoardLogic3 {
                 winCount = 100000;
                 return winCount;
             } else {
-                winCount = horizontalCheckCount() + verticalCheckCount()
-                        + ascendingDiagonalCheckCount() + descendingDiagonalCheckCount();
+                winCount = twoConnectCount() + threeConnectCount();
 
                 winCount = winCount;
 

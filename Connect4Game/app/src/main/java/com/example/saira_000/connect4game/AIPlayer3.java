@@ -72,7 +72,7 @@ public class AIPlayer3 {
     public int mediumLevel(State state  , int level ) throws CloneNotSupportedException {
 
         possibleValues = new ArrayList<MyNode>();
-        this.mainDepth = 3;
+        this.mainDepth = level;
         State newState = new State(numberOfRows , numberOfColumns);
         newState = state.deepClone();
         int col = 0;
@@ -86,10 +86,9 @@ public class AIPlayer3 {
 
         printNode(aiNode.game);
 
-        int bestScore = miniMax(aiNode,mainDepth,true);
-
         long startTime = System.nanoTime();
 
+        int bestScore = miniMax(aiNode,mainDepth,true);
         //int bestScore = miniMaxAB(aiNode,mainDepth,-10000000 , 100000000, true);
 
         String t =bestScore+ "";
@@ -128,10 +127,9 @@ public class AIPlayer3 {
 
         printNode(aiNode.game);
 
-        //int bestScore = miniMax(aiNode,mainDepth,true);
-
         long startTime = System.nanoTime();
 
+        //int bestScore = miniMax(aiNode,mainDepth,true);
         int bestScore = miniMaxAB(aiNode,mainDepth,-10000000 , 100000000, true);
 
         String t =bestScore+ "";
