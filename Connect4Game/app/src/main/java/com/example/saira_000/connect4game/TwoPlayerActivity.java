@@ -90,8 +90,12 @@ public class TwoPlayerActivity extends AppCompatActivity {
     }
 
     private void drop(int col) {
-        if (board.winCondition)
+        if (board.winCondition) {
             return;
+        }
+        if(checkDraw()){
+            return;
+        }
         int row = board.lastAvailableRow(col);
         if (row == -1)
             return;
@@ -110,9 +114,27 @@ public class TwoPlayerActivity extends AppCompatActivity {
 
         if (board.checkForWin()) {
             win();
-        } else {
+        }
+        else if (checkDraw()){
+            viewHolder.winnerText.setText("DRAW !!!");
+            viewHolder.winnerText.setTextColor(Color.parseColor("#d500f9"));
+            viewHolder.winnerText.setVisibility(View.VISIBLE);
+        }
+
+        else {
             changeTurn();
         }
+    }
+
+    private boolean checkDraw(){
+        for (int i=0 ; i<numberOfRows ; i++){
+            for(int j=0 ; j < numberOfColumns ; j++){
+                if(board.cells[i][j].empty){
+                    return false;
+                }
+            }
+        }
+        return  true;
     }
 
     private void win() {
