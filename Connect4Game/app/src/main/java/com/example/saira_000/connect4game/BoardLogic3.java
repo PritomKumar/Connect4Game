@@ -496,7 +496,7 @@ public class BoardLogic3 {
                         + 10* (threeConnectCount(2) - threeConnectCount(1))
                         + 20* (fourConnectCount(2)) - fourConnectCount(1)    ;
 
-                winCount = -winCount;
+                winCount = (-1)*winCount;
                 String t = winCount + "";
                 Log.d("winCount", t);
                 return winCount;

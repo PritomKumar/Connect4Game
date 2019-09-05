@@ -347,7 +347,7 @@ public class AIPlayer3 {
 
         }
 
-        Log.d("node", test);
+        Log.d("node5", test);
     }
 
     private int tooglePlayer(int player){
@@ -457,9 +457,8 @@ public class AIPlayer3 {
 
         MyNode newNode = node.deepClone();
 
-
         String t2 = node.score + "";
-        Log.d("scorenode", t2);
+        //Log.d("scorenode", t2);
 /*
         for(MyNode s: node.getSuccessor()){
             String t3 = s.getParent() + "";
@@ -476,7 +475,7 @@ public class AIPlayer3 {
             player5 = 1;
         }
         BoardLogic3 boardLogic = new BoardLogic3(node.player , newNode.game , numberOfRows,numberOfColumns);
-
+      //  printNode(boardLogic.cells);
 
 
         if(depth == 0 || boardLogic.checkForWin()){
@@ -491,15 +490,15 @@ public class AIPlayer3 {
 
             for (MyNode child : generateChildren(newNode)) {
                 col++;
-               // printNode(child.game);
+                printNode(child.game);
                 v = Math.max(v, miniMaxAB(child, depth - 1, alpha, beta, false));
                 alpha = Math.max(alpha, v);
                 node.score = v ;
                 if(depth == mainDepth){
                     possibleValues.add(child);
                 }
-               // String t = child.score + "";
-                //Log.d("scoremax", t);
+                String t = child.score + "";
+                Log.d("scoremax", t);
                 if (beta <= alpha) {
                     break;
                 }
@@ -510,7 +509,7 @@ public class AIPlayer3 {
         else {
             int v = 1000000000;
             for (MyNode child : generateChildren(newNode)) {
-                //printNode(child.game);
+                printNode(child.game);
 
                 v = Math.min(v, miniMaxAB(child, depth - 1, alpha, beta, true));
                 beta = Math.min(beta, v);
@@ -518,8 +517,8 @@ public class AIPlayer3 {
                 if(depth == mainDepth){
                     possibleValues.add(child);
                 }
-                //String t = child.score + "";
-               //Log.d("scoremin", t);
+                String t = child.score + "";
+                Log.d("scoremin", t);
                 if (beta <= alpha) {
                     break;
                 }
