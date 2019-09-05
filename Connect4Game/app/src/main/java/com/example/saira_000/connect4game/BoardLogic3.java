@@ -489,12 +489,12 @@ public class BoardLogic3 {
 
         if(node.player == 2) {
             if (checkForWin()) {
-                winCount = -1000000;
+                winCount = -10000000;
                 return winCount;
             } else {
-                winCount = 10*(twoConnectCount(2) - twoConnectCount(1))
-                        + 50* (threeConnectCount(2) - threeConnectCount(1))
-                        + 100* (fourConnectCount(2)) - fourConnectCount(1)    ;
+                winCount = 5*(twoConnectCount(2) - twoConnectCount(1))
+                        + 10* (threeConnectCount(2) - threeConnectCount(1))
+                        + 20* (fourConnectCount(2)) - fourConnectCount(1)    ;
 
                 winCount = -winCount;
                 String t = winCount + "";
@@ -504,12 +504,12 @@ public class BoardLogic3 {
         }
         else if(node.player == 1) {
             if (checkForWin()) {
-                winCount = 1000000;
+                winCount = 10000000;
                 return winCount;
             } else {
-                winCount = 10*(twoConnectCount(1) - twoConnectCount(2))
-                        + 50* (threeConnectCount(1) - threeConnectCount(2))
-                        + 100* (fourConnectCount(1)) - fourConnectCount(2) ;
+                winCount = 5*(twoConnectCount(1) - twoConnectCount(2))
+                        + 10* (threeConnectCount(1) - threeConnectCount(2))
+                        + 20* (fourConnectCount(1)) - fourConnectCount(2) ;
 
                 winCount = winCount;
 

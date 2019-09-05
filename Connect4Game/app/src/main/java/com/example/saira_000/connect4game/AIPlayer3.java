@@ -75,9 +75,8 @@ public class AIPlayer3 {
         this.mainDepth = level;
         State newState = new State(numberOfRows , numberOfColumns);
         newState = state.deepClone();
-        int col = 0;
 
-        printNode2(newState.board);
+        //printNode2(newState.board);
 
         int [][] aiBoard = convertToMatrix(newState.board );
         MyNode aiNode = new MyNode(aiBoard , 2);
@@ -102,7 +101,7 @@ public class AIPlayer3 {
         long endTime = System.nanoTime();
         long timeElapsed = endTime - startTime;
 
-        String s ="Time in Milliseconds : " + (int)timeElapsed + "" ;
+        String s ="Time in Nano seconds : " + (int)timeElapsed + "" ;
         Log.d("Timein" , s);
 
        // printNode(newState.board);
@@ -399,13 +398,13 @@ public class AIPlayer3 {
         BoardLogic3 boardLogic = new BoardLogic3(node.player , node.game , numberOfRows,numberOfColumns);
         Log.d("node", "BoardLogic");
         //printNode(boardLogic.cells);
-
+/*
         if(boardLogic.checkForWin()){
             Log.d("winners", "Winnner!!!!!!!");
             int result = boardLogic.evalulationFunction(node);
             Log.d("winners", result + "" );
         }
-
+*/
         if(depth == 0 || boardLogic.checkForWin()){
             int result = boardLogic.evalulationFunction(node);
             node.score = result;
