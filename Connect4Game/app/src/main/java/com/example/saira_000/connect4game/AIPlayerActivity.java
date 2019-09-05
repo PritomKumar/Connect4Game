@@ -228,15 +228,15 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
                 playerTurn = aiPlayer.easyLevel(state, level);
             }
 
-            else if(level == 2 ) {
+            else if(level == 3 ) {
                 playerTurn = aiPlayer.mediumLevel(state, level);
             }
 
-            else if(level == 3 ) {
+            else if(level == 4 ) {
                 playerTurn = aiPlayer.hardLevel(state, level);
             }
 
-            else if(level == 4 ) {
+            else if(level == 5 ) {
                 playerTurn = aiPlayer.veryHardLevel(state, level);
             }
 
@@ -300,7 +300,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
             case PLAYER_2:
                 return R.drawable.yellow;
         }
-        return R.drawable.red;
+        return R.drawable.yellow;
     }
 
     private void reset() {

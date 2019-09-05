@@ -322,6 +322,91 @@ public class BoardLogic3 {
         return count;
     }
 
+
+    private  int fourConnectHorizontal(int player){
+
+        int fourConnectHorizontal=0;
+
+        for(int i=0 ; i<numberOfRows ; i++){
+            for (int j=0 ; j<=numberOfColumns-4 ; j++){
+
+                if(cells[i][j] == player && cells[i][j+1] == player
+                        && cells[i][j+2] == player && cells[i][j+3] == player){
+                    fourConnectHorizontal++;
+                }
+            }
+        }
+        String t = fourConnectHorizontal +"";
+        Log.d("fourhori", t);
+        return  fourConnectHorizontal;
+
+    }
+
+    private  int fourConnectVertical(int player){
+
+        int fourConnectVertical=0;
+
+        for(int i=0 ; i<=numberOfRows-4 ; i++){
+            for (int j=0 ; j<numberOfColumns ; j++){
+
+
+                if(cells[i][j] == player && cells[i+1][j] == player
+                        && cells[i+2][j] == player && cells[i+3][j] == player){
+                    fourConnectVertical++;
+                }
+            }
+        }
+        String t = fourConnectVertical +"";
+        Log.d("fourverti", t);
+        return  fourConnectVertical;
+
+    }
+
+    private  int fourConnectAsending(int player){
+
+        int fourConnectAsending=0;
+
+        for(int i=0 ; i<=numberOfRows - 4 ; i++){
+            for (int j=0 ; j<=numberOfColumns-4 ; j++){
+
+                if(cells[i][j] == player && cells[i+1][j+1] == player
+                        && cells[i+2][j+2] == player && cells[i+3][j+3] == player){
+                    fourConnectAsending++;
+                }
+            }
+        }
+        String t = fourConnectAsending +"";
+        Log.d("fourase", t);
+        return  fourConnectAsending;
+
+    }
+
+    private  int fourConnectDesending(int player){
+
+        int fourConnectDesending=0;
+
+        for(int i=numberOfRows-1 ; i>=3 ; i--){
+            for (int j=0 ; j<=numberOfColumns-4   ; j++){
+
+                if(cells[i][j] == player && cells[i-1][j+1] == player
+                        && cells[i-2][j+2] == player && cells[i-3][j+3] == player){
+
+                    fourConnectDesending++;
+                }
+            }
+        }
+        String t = fourConnectDesending +"";
+        Log.d("fourdes", t);
+        return  fourConnectDesending;
+
+    }
+
+    private  int fourConnectCount(int player){
+        int count = fourConnectVertical(player)*1000 + fourConnectHorizontal(player)*1000
+                + fourConnectAsending(player)*1500 + fourConnectDesending(player)*1500;
+        return count;
+    }
+    
     public int horizontalCheckCount() {
 
         int horizontalCount = 0;
@@ -404,11 +489,13 @@ public class BoardLogic3 {
 
         if(node.player == 2) {
             if (checkForWin()) {
-                winCount = -100000;
+                winCount = -1000000;
                 return winCount;
             } else {
                 winCount = 10*(twoConnectCount(2) - twoConnectCount(1))
-                        + 50* (threeConnectCount(2) - threeConnectCount(1)) ;
+                        + 50* (threeConnectCount(2) - threeConnectCount(1))
+                        + 100* (fourConnectCount(2)) - fourConnectCount(1)    ;
+
                 winCount = -winCount;
                 String t = winCount + "";
                 Log.d("winCount", t);
@@ -417,11 +504,12 @@ public class BoardLogic3 {
         }
         else if(node.player == 1) {
             if (checkForWin()) {
-                winCount = 100000;
+                winCount = 1000000;
                 return winCount;
             } else {
                 winCount = 10*(twoConnectCount(1) - twoConnectCount(2))
-                        + 50* (threeConnectCount(1) - threeConnectCount(2));
+                        + 50* (threeConnectCount(1) - threeConnectCount(2))
+                        + 100* (fourConnectCount(1)) - fourConnectCount(2) ;
 
                 winCount = winCount;
 

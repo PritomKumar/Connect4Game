@@ -13,7 +13,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
-        android:background="#C62828"
+        android:background="#03a9f4"
         android:text="AI Player"
         android:textColor="#000"
         app:layout_constraintEnd_toEndOf="parent"

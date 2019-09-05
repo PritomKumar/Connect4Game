@@ -88,8 +88,8 @@ public class AIPlayer3 {
 
         long startTime = System.nanoTime();
 
-        int bestScore = miniMax(aiNode,mainDepth,true);
-        //int bestScore = miniMaxAB(aiNode,mainDepth,-10000000 , 100000000, true);
+        //int bestScore = miniMax(aiNode,mainDepth,true);
+        int bestScore = miniMaxAB(aiNode,mainDepth,-10000000 , 100000000, true);
 
         String t =bestScore+ "";
         Log.d("bestScore" , t);
@@ -418,7 +418,7 @@ public class AIPlayer3 {
 
                 String s = "Child = " + child.player;
                 Log.d("node" , s);
-                printNode(child.game);
+                //printNode(child.game);
                 v = Math.max(v, miniMax(child, depth - 1, false));
                 node.score = v ;
                 if(depth == mainDepth){
@@ -434,17 +434,17 @@ public class AIPlayer3 {
         else {
             int v = 1000000000;
             for (MyNode child : generateChildren(node)) {
-                String s = "Child = " + child.player;
-                Log.d("node" , s);
-                printNode(child.game);
+               // String s = "Child = " + child.player;
+               // Log.d("node" , s);
+               // printNode(child.game);
 
                 v = Math.min(v, miniMax(child, depth - 1, true));
                 node.score = v ;
                 if(depth == mainDepth){
                     possibleValues.add(child);
                 }
-                String t = child.score + "";
-                Log.d("scoremin", t);
+               // String t = child.score + "";
+               // Log.d("scoremin", t);
 
             }
             return v;
@@ -492,15 +492,15 @@ public class AIPlayer3 {
 
             for (MyNode child : generateChildren(newNode)) {
                 col++;
-                printNode(child.game);
+               // printNode(child.game);
                 v = Math.max(v, miniMaxAB(child, depth - 1, alpha, beta, false));
                 alpha = Math.max(alpha, v);
                 node.score = v ;
                 if(depth == mainDepth){
                     possibleValues.add(child);
                 }
-                String t = child.score + "";
-                Log.d("scoremax", t);
+               // String t = child.score + "";
+                //Log.d("scoremax", t);
                 if (beta <= alpha) {
                     break;
                 }
@@ -511,7 +511,7 @@ public class AIPlayer3 {
         else {
             int v = 1000000000;
             for (MyNode child : generateChildren(newNode)) {
-                printNode(child.game);
+                //printNode(child.game);
 
                 v = Math.min(v, miniMaxAB(child, depth - 1, alpha, beta, true));
                 beta = Math.min(beta, v);
@@ -519,8 +519,8 @@ public class AIPlayer3 {
                 if(depth == mainDepth){
                     possibleValues.add(child);
                 }
-                String t = child.score + "";
-                Log.d("scoremin", t);
+                //String t = child.score + "";
+               //Log.d("scoremin", t);
                 if (beta <= alpha) {
                     break;
                 }
@@ -538,9 +538,9 @@ public class AIPlayer3 {
 
         for(int i = 0 ; i< possibleValues.size() ; i++){
             if(possibleValues.get(i).score == bestScore){
-                String s2 = "Parent  = " + possibleValues.get(i).col + "" ;
-                Log.d("node" , s2);
-                printNode(possibleValues.get(i).game);
+                //String s2 = "Parent  = " + possibleValues.get(i).col + "" ;
+                //Log.d("node" , s2);
+                //printNode(possibleValues.get(i).game);
 
                 return possibleValues.get(i).col;
             }
