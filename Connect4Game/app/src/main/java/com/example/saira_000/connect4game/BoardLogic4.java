@@ -2,17 +2,18 @@ package com.example.saira_000.connect4game;
 
 import android.util.Log;
 
-public class BoardLogic3 {
+public class BoardLogic4 {
 
     private int player;
     private int opponant;
     public int[][] cells;
     private int[][] backUpCells;
     private int numberOfColumns;
+    private int playerWin=0;
     private int numberOfRows;
     private int winCount=0;
 
-    public BoardLogic3(int player, int[][] cells, int numberOfRows , int numberOfColumns) {
+    public BoardLogic4(int player, int[][] cells, int numberOfRows , int numberOfColumns) {
         this.player = player;
         this.cells = cells;
         this.backUpCells = cells;
@@ -35,12 +36,18 @@ public class BoardLogic3 {
     public boolean horizontalCheck() {
         for(int i=0 ; i<numberOfRows ; i++){
             for (int j=0 ; j<=numberOfColumns-4 ; j++){
-
-                    if(cells[i][j]== player && cells[i][j+1]== player
-                            && cells[i][j+2]== player && cells[i][j+3]== player){
-                        return  true;
+                if(cells[i][j]!=0) {
+                    if (cells[i][j] == cells[i][j] && cells[i][j + 1] == cells[i][j]
+                            && cells[i][j + 2] == cells[i][j] && cells[i][j + 3] == cells[i][j]) {
+                        if(cells[i][j] ==1){
+                            playerWin =1;
+                        }
+                        else if(cells[i][j] == 2){
+                            playerWin =2;
+                        }
+                        return true;
                     }
-
+                }
             }
         }
         return  false;
@@ -49,29 +56,42 @@ public class BoardLogic3 {
     public boolean verticalCheck() {
         for(int i=0 ; i<=numberOfRows-4 ; i++){
             for (int j=0 ; j<numberOfColumns ; j++){
-
+                if(cells[i][j]!=0) {
                     String t = i+3 +"";
                     Log.d("verti", t);
-                    if(cells[i][j]== player && cells[i+1][j] == player
-                            && cells[i+2][j]== player && cells[i+3][j]== player){
-                        return  true;
+                    if (cells[i][j] == cells[i][j] && cells[i + 1][j] == cells[i][j]
+                            && cells[i + 2][j] == cells[i][j] && cells[i + 3][j] == cells[i][j]) {
+                        if(cells[i][j] ==1){
+                            playerWin =1;
+                        }
+                        else if(cells[i][j] == 2){
+                            playerWin =2;
+                        }
+                        return true;
                     }
-
+                }
             }
         }
         return  false;
     }
     public boolean ascendingDiagonalCheck() {
         for(int i=0 ; i<=numberOfRows - 4 ; i++){
-            for (int j=0 ; j<=numberOfColumns-4 ; j++){
-
-                    String t = i+3 +"";
+            for (int j=0 ; j<=numberOfColumns-4 ; j++) {
+                if (cells[i][j] != 0) {
+                    String t = i + 3 + "";
                     Log.d("asi", t);
-                    if(cells[i][j]== player && cells[i+1][j+1]== player
-                            && cells[i+2][j+2]== player && cells[i+3][j+3]== player){
-                        return  true;
+                    if (cells[i][j] == cells[i][j] && cells[i + 1][j + 1] == cells[i][j]
+                            && cells[i + 2][j + 2] == cells[i][j] && cells[i + 3][j + 3] == cells[i][j]) {
+                        if(cells[i][j] ==1){
+                            playerWin =1;
+                        }
+                        else if(cells[i][j] == 2){
+                            playerWin =2;
+                        }
+                        return true;
                     }
                 }
+            }
 
         }
         return  false;
@@ -81,14 +101,20 @@ public class BoardLogic3 {
 
         for(int i=numberOfRows-1 ; i>=3 ; i--){
             for (int j=0 ; j<=numberOfColumns-4   ; j++){
-
-                    String t = i+3 +"";
+                if(cells[i][j]!=0) {
+                    String t = i + 3 + "";
                     Log.d("dsi", t);
-                    if(cells[i][j]== player && cells[i-1][j+1]== player
-                            && cells[i-2][j+2]== player && cells[i-3][j+3]== player){
-                        return  true;
+                    if (cells[i][j] == cells[i][j] && cells[i - 1][j + 1] == cells[i][j]
+                            && cells[i - 2][j + 2] == cells[i][j] && cells[i - 3][j + 3] == cells[i][j]) {
+                        if(cells[i][j] ==1){
+                            playerWin =1;
+                        }
+                        else if(cells[i][j] == 2){
+                            playerWin =2;
+                        }
+                        return true;
                     }
-
+                }
             }
         }
         return  false;
@@ -238,7 +264,7 @@ public class BoardLogic3 {
     
     private  int twoConnectCount(int player){
         int count = twoConnectVertical( player)*10 + twoConnectHorizontal(player)*10
-                + twoConnectAsending(player)*15 + twoConnectDesending(player)*15;
+                + twoConnectAsending(player)*10 + twoConnectDesending(player)*10;
         return count;
     }
 
@@ -318,7 +344,7 @@ public class BoardLogic3 {
 
     private  int threeConnectCount(int player){
         int count = threeConnectVertical(player)*100 + threeConnectHorizontal(player)*100
-                + threeConnectAsending(player)*150 + threeConnectDesending(player)*150;
+                + threeConnectAsending(player)*100 + threeConnectDesending(player)*100;
         return count;
     }
 
@@ -403,7 +429,7 @@ public class BoardLogic3 {
 
     private  int fourConnectCount(int player){
         int count = fourConnectVertical(player)*1000 + fourConnectHorizontal(player)*1000
-                + fourConnectAsending(player)*1500 + fourConnectDesending(player)*1500;
+                + fourConnectAsending(player)*1000 + fourConnectDesending(player)*1000;
         return count;
     }
     
@@ -488,7 +514,12 @@ public class BoardLogic3 {
 
 
             if (checkForWin()) {
-                winCount = 10000000;
+                if(playerWin == 1) {
+                    winCount = 10000000;
+                }
+                else {
+                    winCount = -10000000;
+                }
                 return winCount;
             } else {
                 winCount = 5*(twoConnectCount(1) - twoConnectCount(2))

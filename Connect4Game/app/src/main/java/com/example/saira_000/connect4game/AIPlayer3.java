@@ -72,7 +72,7 @@ public class AIPlayer3 {
     public int mediumLevel(State state  , int level ) throws CloneNotSupportedException {
 
         possibleValues = new ArrayList<MyNode>();
-        this.mainDepth = level;
+        this.mainDepth = 2;
         State newState = new State(numberOfRows , numberOfColumns);
         newState = state.deepClone();
 
@@ -87,8 +87,8 @@ public class AIPlayer3 {
 
         long startTime = System.nanoTime();
 
-        //int bestScore = miniMax(aiNode,mainDepth,true);
-        int bestScore = miniMaxAB(aiNode,mainDepth,-10000000 , 100000000, true);
+        int bestScore = miniMax(aiNode,mainDepth,true);
+        //int bestScore = miniMaxAB(aiNode,mainDepth,-10000000 , 100000000, true);
 
         String t =bestScore+ "";
         Log.d("bestScore" , t);
@@ -395,7 +395,7 @@ public class AIPlayer3 {
             player5 = 1;
         }
 
-        BoardLogic3 boardLogic = new BoardLogic3(node.player , node.game , numberOfRows,numberOfColumns);
+        BoardLogic4 boardLogic = new BoardLogic4(node.player , node.game , numberOfRows,numberOfColumns);
         Log.d("node", "BoardLogic");
         //printNode(boardLogic.cells);
 /*
@@ -417,7 +417,7 @@ public class AIPlayer3 {
 
                 String s = "Child = " + child.player;
                 Log.d("node" , s);
-                //printNode(child.game);
+                printNode(child.game);
                 v = Math.max(v, miniMax(child, depth - 1, false));
                 node.score = v ;
                 if(depth == mainDepth){
@@ -435,7 +435,7 @@ public class AIPlayer3 {
             for (MyNode child : generateChildren(node)) {
                // String s = "Child = " + child.player;
                // Log.d("node" , s);
-               // printNode(child.game);
+                printNode(child.game);
 
                 v = Math.min(v, miniMax(child, depth - 1, true));
                 node.score = v ;
@@ -474,7 +474,7 @@ public class AIPlayer3 {
         else if(!maximizingPlayer){
             player5 = 1;
         }
-        BoardLogic3 boardLogic = new BoardLogic3(node.player , newNode.game , numberOfRows,numberOfColumns);
+        BoardLogic4 boardLogic = new BoardLogic4(node.player , newNode.game , numberOfRows,numberOfColumns);
       //  printNode(boardLogic.cells);
 
 
