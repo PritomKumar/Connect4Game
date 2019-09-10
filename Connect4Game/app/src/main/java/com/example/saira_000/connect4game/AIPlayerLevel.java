@@ -38,7 +38,7 @@ public class AIPlayerLevel extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AIPlayerLevel.this , AIPlayerActivity.class);
-                intent.putExtra("level" , 2);
+                intent.putExtra("level" , 1);
                 startActivity(intent);
             }
         });
@@ -49,7 +49,7 @@ public class AIPlayerLevel extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AIPlayerLevel.this , AIPlayerActivity.class);
-                intent.putExtra("level" , 3);
+                intent.putExtra("level" , 2);
                 startActivity(intent);
             }
         });
@@ -60,7 +60,7 @@ public class AIPlayerLevel extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AIPlayerLevel.this , AIPlayerActivity.class);
-                intent.putExtra("level" , 4);
+                intent.putExtra("level" , 3);
                 startActivity(intent);
             }
         });
@@ -71,7 +71,7 @@ public class AIPlayerLevel extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AIPlayerLevel.this , AIPlayerActivity.class);
-                intent.putExtra("level" , 5);
+                intent.putExtra("level" , 4);
                 startActivity(intent);
             }
         });

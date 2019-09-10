@@ -398,13 +398,14 @@ public class AIPlayer3 {
         BoardLogic4 boardLogic = new BoardLogic4(node.player , node.game , numberOfRows,numberOfColumns);
         Log.d("node", "BoardLogic");
         //printNode(boardLogic.cells);
-/*
+
         if(boardLogic.checkForWin()){
             Log.d("winners", "Winnner!!!!!!!");
             int result = boardLogic.evalulationFunction(node);
             Log.d("winners", result + "" );
+            possibleValues.add(node);
         }
-*/
+
         if(depth == 0 || boardLogic.checkForWin()){
             int result = boardLogic.evalulationFunction(node);
             node.score = result;
@@ -476,7 +477,12 @@ public class AIPlayer3 {
         }
         BoardLogic4 boardLogic = new BoardLogic4(node.player , newNode.game , numberOfRows,numberOfColumns);
       //  printNode(boardLogic.cells);
-
+        if(boardLogic.checkForWin()){
+            Log.d("winners", "Winnner!!!!!!!");
+            int result = boardLogic.evalulationFunction(node);
+            Log.d("winners", result + "" );
+            possibleValues.add(node);
+        }
 
         if(depth == 0 || boardLogic.checkForWin()){
             int result = boardLogic.evalulationFunction(node);
@@ -535,6 +541,9 @@ public class AIPlayer3 {
         Log.d("possible" , s);
 
         for(int i = 0 ; i< possibleValues.size() ; i++){
+            if(possibleValues.get(i).score >= 10000000){
+                return possibleValues.get(i).col;
+            }
             if(possibleValues.get(i).score == bestScore){
                 //String s2 = "Parent  = " + possibleValues.get(i).col + "" ;
                 //Log.d("node" , s2);

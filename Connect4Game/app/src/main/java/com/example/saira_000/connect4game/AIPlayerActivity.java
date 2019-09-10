@@ -165,9 +165,15 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
             viewHolder.winnerText.setText("DRAW !!!");
             viewHolder.winnerText.setTextColor(Color.parseColor("#d500f9"));
             viewHolder.winnerText.setVisibility(View.VISIBLE);
-        }
+    }
         else {
+            try {
+                //set time in mili
+               // Thread.sleep(3000);
 
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             toggleTurn();
         }
     }
@@ -224,19 +230,19 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
                 playerTurn = aiPlayer.babyLevel();
             }
 
-            else if(level == 2 ) {
+            else if(level == 1 ) {
                 playerTurn = aiPlayer.easyLevel(state, level);
             }
 
-            else if(level == 3 ) {
+            else if(level == 2 ) {
                 playerTurn = aiPlayer.mediumLevel(state, level);
             }
 
-            else if(level == 4 ) {
+            else if(level == 3 ) {
                 playerTurn = aiPlayer.hardLevel(state, level);
             }
 
-            else if(level == 5 ) {
+            else if(level == 4 ) {
                 playerTurn = aiPlayer.veryHardLevel(state, level);
             }
 
