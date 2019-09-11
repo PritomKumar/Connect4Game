@@ -12,6 +12,7 @@ public class BoardLogic4 {
     private int playerWin=0;
     private int numberOfRows;
     private int winCount=0;
+    private int [] valueMultiplier = new int[7];
 
     public BoardLogic4(int player, int[][] cells, int numberOfRows , int numberOfColumns) {
         this.player = player;
@@ -19,8 +20,16 @@ public class BoardLogic4 {
         this.backUpCells = cells;
         this.numberOfRows = numberOfRows;
         this.numberOfColumns = numberOfColumns;
-
         this.opponant = player;
+        valueMultiplier[0] = 10;
+        valueMultiplier[1] = 20;
+        valueMultiplier[2] = 30;
+        valueMultiplier[3] = 40;
+        valueMultiplier[4] = 30;
+        valueMultiplier[5] = 20;
+        valueMultiplier[6] = 10;
+
+
     }
 
     public boolean checkForWin(){
@@ -513,6 +522,7 @@ public class BoardLogic4 {
         winCount = 0;
 
 
+
             if (checkForWin()) {
                 if(playerWin == 1) {
                     winCount = 10000000;
@@ -525,6 +535,9 @@ public class BoardLogic4 {
                 winCount = 5*(twoConnectCount(1) - twoConnectCount(2))
                         + 10* (threeConnectCount(1) - threeConnectCount(2))
                         + 20* (fourConnectCount(1)) - fourConnectCount(2)    ;
+                int col = node.col;
+                winCount = winCount + valueMultiplier[col];
+                Log.d("kono",valueMultiplier[col]+"");
 
                 if(winCount == 0){
                     winCount = -10000000;

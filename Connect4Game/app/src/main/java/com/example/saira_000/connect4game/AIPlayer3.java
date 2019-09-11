@@ -3,6 +3,7 @@ package com.example.saira_000.connect4game;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class AIPlayer3 {
     private Board.Turn newplayer;
@@ -537,6 +538,9 @@ public class AIPlayer3 {
 
     private  int findMove(int bestScore){
 
+        int result =-1;
+        ArrayList<Integer> bestResultArray = new ArrayList<Integer>();
+
         String s = "Possible value size = " + possibleValues.size() + "" ;
         Log.d("possible" , s);
 
@@ -548,11 +552,13 @@ public class AIPlayer3 {
                 //String s2 = "Parent  = " + possibleValues.get(i).col + "" ;
                 //Log.d("node" , s2);
                 //printNode(possibleValues.get(i).game);
+                bestResultArray.add(possibleValues.get(i).col);
 
-                return possibleValues.get(i).col;
             }
         }
-        return -1;
+        Random randomGenerator = new Random();
+        int randomInt = randomGenerator.nextInt(bestResultArray.size());
+        return  bestResultArray.get(randomInt);
     }
 
 /*

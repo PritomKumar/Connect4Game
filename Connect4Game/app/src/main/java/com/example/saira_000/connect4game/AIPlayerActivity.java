@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -156,26 +157,48 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
 
         onEnterAnimationComplete();
         state.generateSuccessor(state.turn , col);
+
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+               // boardView.setClickable(true);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+               // boardView.setClickable(false);
+                if (state.checkForWin()) {
+                    win();
+                }
+                else if (checkDraw()){
+                    viewHolder.winnerText.setText("DRAW !!!");
+                    viewHolder.winnerText.setTextColor(Color.parseColor("#d500f9"));
+                    viewHolder.winnerText.setVisibility(View.VISIBLE);
+                }
+                else {
+                    try {
+                        //set time in mili
+                         Thread.sleep(1000);
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    try {
+                        toggleTurn();
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
         //aiPlayer.printNode(state.board);
 
-        if (state.checkForWin()) {
-            win();
-        }
-        else if (checkDraw()){
-            viewHolder.winnerText.setText("DRAW !!!");
-            viewHolder.winnerText.setTextColor(Color.parseColor("#d500f9"));
-            viewHolder.winnerText.setVisibility(View.VISIBLE);
-    }
-        else {
-            try {
-                //set time in mili
-               // Thread.sleep(3000);
 
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            toggleTurn();
-        }
     }
 
     private void win() {
