@@ -87,14 +87,15 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
     }
 
     private void playerTouch() {
-        
-        boardView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                   
-                switch (motionEvent.getAction()) {
 
-                    case MotionEvent.ACTION_POINTER_UP: 
+
+            boardView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                    switch (motionEvent.getAction()) {
+
+                        case MotionEvent.ACTION_POINTER_UP:
                         case MotionEvent.ACTION_UP: {
                             int col = colAtX(motionEvent.getX());
                             String temp = motionEvent.getX() + "";
@@ -105,12 +106,13 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
                                 } catch (CloneNotSupportedException e) {
                                     e.printStackTrace();
                                 }
-                            } 
+                            }
                         }
                     }
                     return true;
-            }
-        });
+                }
+            });
+
 
 
     }
@@ -145,8 +147,8 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
 
 
         final ImageView cell = cells[row][col];
-        //float move = -(cell.getHeight() * row + cell.getHeight() + 15);
-        float move = -(cell.getHeight() * row + cell.getHeight());
+        float move = -(cell.getHeight() * row + cell.getHeight() + 15);
+        //float move = -(cell.getHeight() * row + cell.getHeight());
         cell.setY(move);
         cell.setImageResource(resourceForTurn());
 
@@ -178,7 +180,7 @@ public class AIPlayerActivity  extends AppCompatActivity implements View.OnClick
                 else {
                     try {
                         //set time in mili
-                         Thread.sleep(1000);
+                        // Thread.sleep(1000);
 
                     }catch (Exception e){
                         e.printStackTrace();
